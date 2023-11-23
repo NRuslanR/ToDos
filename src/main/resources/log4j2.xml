@@ -1,0 +1,32 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<Configuration xmlns="http://logging.apache.org/log4j/2.0/config">
+
+    <Appenders>
+
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="SSS [%d{yyyy-MM-dd HH:mm:ss}] %p %m%n" />
+        </Console>
+
+    </Appenders>
+
+    <Loggers>
+
+        <Logger name="org.examples.todos.ToDosApiController">
+            <AppenderRef ref="console" />
+        </Logger>
+
+        <Logger 
+            name="org.examples.todos" 
+            level="debug"
+        >
+            <AppenderRef ref="console" />
+
+        </Logger>
+
+        <Root level="debug" additivity="true">
+            <AppenderRef ref="console" />
+        </Root>
+
+    </Loggers>
+
+</Configuration>
