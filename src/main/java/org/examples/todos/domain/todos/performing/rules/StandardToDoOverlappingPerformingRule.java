@@ -1,6 +1,7 @@
 package org.examples.todos.domain.todos.performing.rules;
 
 import org.examples.todos.domain.common.entities.rules.DomainEntityRelationshipRuleException;
+import org.examples.todos.domain.common.errors.DomainException;
 import org.examples.todos.domain.todos.actors.ToDo;
 
 public class StandardToDoOverlappingPerformingRule implements ToDoOverlappingPerformingRule {
@@ -9,6 +10,7 @@ public class StandardToDoOverlappingPerformingRule implements ToDoOverlappingPer
 	public void ensureSatisfiedFor(ToDo targetToDo, ToDo overlappingToDo) throws DomainEntityRelationshipRuleException {
 	
 		ensureOverlappingToDoIsParentForTargetToDo(overlappingToDo, targetToDo);
+		ensureOverlappingToDoIsPerformed(overlappingToDo);
 		ensureTargetToDoIsNotPerformed(targetToDo);
 		
 	}
@@ -23,6 +25,18 @@ public class StandardToDoOverlappingPerformingRule implements ToDoOverlappingPer
 			);
 		}
 		
+	}
+	
+	private void ensureOverlappingToDoIsPerformed(ToDo overlappingToDo) {
+		
+		if (!overlappingToDo.isPerformed())
+		{
+			throw new DomainException(
+				"Overlapping To-Do \"" 
+				+ overlappingToDo.getName() + 
+				"\" must be performed before the sub To-Dos' overlappig performing"
+			);
+		}
 	}
 
 	private void ensureTargetToDoIsNotPerformed(ToDo targetToDo) {
