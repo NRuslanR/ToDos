@@ -7,40 +7,33 @@ import org.examples.todos.domain.common.errors.DomainException;
 // refactor for equals, law of demeter
 public abstract class DomainEntity<
     Key, 
-    BaseInfo extends DomainEntityBaseInfo<Key, BaseInfo, FullInfo>,
-    FullInfo extends DomainEntityInfo<Key, BaseInfo, FullInfo>,
+    Info extends DomainEntityInfo<Key, Info>,
     Entity extends CloneableEntity<Entity>
 
 > extends CloneableEntity<Entity> 
 {
-    
-    protected FullInfo info;
+    protected Info info;
 
-    protected DomainEntity(BaseInfo baseInfo)
+    protected DomainEntity(Info entityInfo)
     {
-        this(baseInfo.toFullInfo());
-    }
+        info = entityInfo.newFullInfoInstance();
 
-    protected DomainEntity(FullInfo fullInfo)
-    {
-        info = fullInfo.getBaseInfo().newFullInfoInstance();
-
-        setInfo(fullInfo);
+        setInfo(entityInfo);
     }
     
-    public FullInfo getInfo()
+    public Info getInfo()
     {
-        return (FullInfo)info.clone();
+        return (Info)info.clone();
     }
 
-    public void setInfo(FullInfo newInfo)
+    public void setInfo(Info newInfo)
     {
-        setId(newInfo.getBaseInfo().getId());
+        setId(newInfo.getId());
     }
 
     public Key getId()
     {
-        return info.getBaseInfo().getId();
+        return info.getId();
     }
 
     private void setId(Key id)
@@ -50,10 +43,10 @@ public abstract class DomainEntity<
             throw new DomainException("Domain entity's id can't be null");
         }
         
-        this.info.getBaseInfo().setId(id);
+        this.info.setId(id);
     }
 
-    public boolean equals(DomainEntity<Key, BaseInfo, FullInfo, Entity> other)
+    public boolean equals(DomainEntity<Key, Info, Entity> other)
     {
         return super.equals(other);
     }
@@ -65,8 +58,8 @@ public abstract class DomainEntity<
             return false;
 
         @SuppressWarnings("unchecked")
-        final DomainEntity<Key, BaseInfo, FullInfo, Entity> otherEntity = 
-        	(DomainEntity<Key, BaseInfo, FullInfo, Entity>)obj;
+        final DomainEntity<Key, Info, Entity> otherEntity = 
+        	(DomainEntity<Key, Info, Entity>)obj;
 
         return otherEntity.getId().getClass().equals(otherEntity.getId().getClass()) &&
             otherEntity.getId().equals(otherEntity.getId());

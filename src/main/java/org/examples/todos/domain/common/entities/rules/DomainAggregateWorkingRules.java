@@ -2,7 +2,7 @@ package org.examples.todos.domain.common.entities.rules;
 
 import org.examples.todos.domain.common.entities.DomainAggregateRoot;
 import org.examples.todos.domain.common.entities.DomainEntity;
-import org.examples.todos.domain.common.entities.DomainEntityBaseInfo;
+import org.examples.todos.domain.common.entities.DomainEntityInfo;
 import org.examples.todos.domain.common.entities.DomainEntityInfo;
 import org.examples.todos.domain.common.entities.rules.access.DomainAggregateChangingRule;
 import org.examples.todos.domain.common.entities.rules.access.DomainAggregateRemovingRule;

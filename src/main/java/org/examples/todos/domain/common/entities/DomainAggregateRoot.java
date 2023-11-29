@@ -8,24 +8,19 @@ import org.examples.todos.domain.common.errors.DomainException;
 @SuppressWarnings("unchecked")
 public abstract class DomainAggregateRoot<
 	Id,
-	BaseInfo extends DomainEntityBaseInfo<Id, BaseInfo, FullInfo>,
-	FullInfo extends DomainEntityInfo<Id, BaseInfo, FullInfo>,
+	Info extends DomainEntityInfo<Id, Info>,
 	WorkingRules extends DomainAggregateWorkingRules,
 	Actor extends DomainEntity,
 	AggregateRoot extends CloneableEntity<AggregateRoot>
 
-> extends DomainEntity<Id, BaseInfo, FullInfo, AggregateRoot>
+> extends DomainEntity<Id, Info, AggregateRoot>
 {
 	private WorkingRules workingRules;
 	private Actor actor;
 	private boolean isInEditing;
 	
-	protected DomainAggregateRoot(BaseInfo baseInfo, WorkingRules workingRules, Actor actor) {
-		
-		this(baseInfo.toFullInfo(), workingRules, actor);
-	}
 	
-	protected DomainAggregateRoot(FullInfo fullInfo, WorkingRules workingRules, Actor actor) {
+	protected DomainAggregateRoot(Info fullInfo, WorkingRules workingRules, Actor actor) {
 		super(fullInfo);
 		
 		setWorkingRules(workingRules);
@@ -55,7 +50,7 @@ public abstract class DomainAggregateRoot<
 	}
 
 	@Override
-	public void setInfo(FullInfo newInfo) {
+	public void setInfo(Info newInfo) {
 		
 		ensureActorCanChangeThis();
 		

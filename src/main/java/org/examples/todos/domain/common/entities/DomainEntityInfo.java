@@ -2,18 +2,26 @@ package org.examples.todos.domain.common.entities;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.experimental.Delegate;
 
 @Data
 @NoArgsConstructor
 public abstract class DomainEntityInfo<
     Key, 
-    BaseInfo extends DomainEntityBaseInfo<Key, BaseInfo, FullInfo>,
-    FullInfo extends DomainEntityInfo<Key, BaseInfo, FullInfo>
+    Info extends DomainEntityInfo<Key, Info>
 
-> extends CloneableEntityInfo<FullInfo>
+> extends CloneableEntityInfo<Info>
 {
-    @NonNull
-    private BaseInfo baseInfo;
+    private Key id;    
+    
+    protected DomainEntityInfo(DomainEntityInfo<Key, Info> other)
+    {
+        this(other.getId());
+    }
+
+    protected DomainEntityInfo(Key id)
+    {
+        setId(id);
+    }
+
+	public abstract Info newFullInfoInstance();
 }
