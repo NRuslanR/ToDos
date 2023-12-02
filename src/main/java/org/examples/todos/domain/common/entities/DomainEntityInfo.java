@@ -1,5 +1,7 @@
 package org.examples.todos.domain.common.entities;
 
+import org.examples.todos.domain.common.base.DomainObject;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +11,7 @@ public abstract class DomainEntityInfo<
     Key, 
     Info extends DomainEntityInfo<Key, Info>
 
-> extends CloneableEntityInfo<Info>
+> extends DomainObject<Info>
 {
     private Key id;    
     

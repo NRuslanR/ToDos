@@ -1,26 +1,40 @@
 package org.examples.todos.domain.actors;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import org.examples.todos.domain.common.errors.DomainException;
-import org.examples.todos.domain.common.objectvalues.DomainValueObject;
+import org.examples.todos.domain.common.valueobjects.DomainValueObject;
 
 public class ToDoNoteList 
     extends DomainValueObject<ToDoNoteList> 
     implements Iterable<ToDoNote> 
 {
     private List<ToDoNote> toDoNoteList;
+    
+    public ToDoNoteList(ToDoNoteList other)
+    {
+    	this(other.toDoNoteList);
+    }
+    
+    public ToDoNoteList(Collection<ToDoNote> noteCollection)
+    {
+    	this();
+    	
+    	addAll(noteCollection);
+    }
 
     public ToDoNoteList()
     {
         toDoNoteList = new ArrayList<>();
     }
-
+    
     @Override
     public Iterator<ToDoNote> iterator() {
         
@@ -62,6 +76,11 @@ public class ToDoNoteList
     private Optional<ToDoNote> findNoteByCondition(Predicate<ToDoNote> condition)
     {
         return toDoNoteList.stream().filter(condition).findFirst();
+    }
+    
+    public void addAll(Collection<ToDoNote> toDos)
+    {
+    	toDos.forEach(this::add);
     }
 
     public void add(ToDoNote toDoNote)
@@ -114,4 +133,15 @@ public class ToDoNoteList
     {
         toDoNoteList.removeIf(condition);
     }
+    
+    public Stream<ToDoNote> stream()
+    {
+    	return toDoNoteList.stream();
+    }
+
+	@Override
+	public ToDoNoteList clone() {
+		
+		return new ToDoNoteList(this);
+	} 
 }

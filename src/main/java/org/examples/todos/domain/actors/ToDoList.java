@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.examples.todos.domain.common.errors.DomainException;
-import org.examples.todos.domain.common.objectvalues.DomainValueObject;
+import org.examples.todos.domain.common.valueobjects.DomainValueObject;
 
 public class ToDoList extends DomainValueObject<ToDoList> implements Iterable<ToDo>  {
 

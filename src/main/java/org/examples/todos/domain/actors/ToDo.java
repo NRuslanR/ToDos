@@ -26,7 +26,7 @@ public class ToDo extends DomainAggregateRoot<
 	}
 
 	@Override
-    public void setInfo(ToDoInfo newInfo)
+    protected void setInfo(ToDoInfo newInfo)
     {
     	super.setInfo(newInfo);
 
@@ -35,6 +35,7 @@ public class ToDo extends DomainAggregateRoot<
     	setName(newInfo.getName()); 	
     	setPriority(newInfo.getPriority());
     	
+    	// refactor: remove
     	if (newInfo.getParentToDoId().isPresent())
     		setParentToDoId(newInfo.getParentToDoId().get());
     	
@@ -50,6 +51,7 @@ public class ToDo extends DomainAggregateRoot<
 	    return info.getParentToDoId().orElse(null);
 	}
 
+	// turn parent todo id to to-do link (ToDoLinkCreationService)
     public void setParentToDoId(UUID parentToDoId)
     {
     	ensureActorCanChangeThis();
@@ -271,4 +273,14 @@ public class ToDo extends DomainAggregateRoot<
     {
     	return !Objects.isNull(getPerformingDate());
     }
+    
+    @Override
+	public ToDo clone() {
+		
+		var clonedToDo = super.clone();
+		
+		clonedToDo.notes = notes.clone();
+						
+		return clonedToDo;
+	}
 }

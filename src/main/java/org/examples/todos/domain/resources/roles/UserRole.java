@@ -14,7 +14,7 @@ public class UserRole extends DomainEntity<UUID, UserRoleInfo, UserRole> {
     }
 
     @Override
-    public void setInfo(UserRoleInfo newInfo)
+    protected void setInfo(UserRoleInfo newInfo)
     {
         super.setInfo(newInfo);
 

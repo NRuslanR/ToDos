@@ -1,6 +1,6 @@
-package org.examples.todos.domain.common.entities;
+package org.examples.todos.domain.common.base;
 
-public abstract class CloneableEntityInfo<E extends CloneableEntityInfo<E>> implements Cloneable 
+public abstract class DomainObject<E extends DomainObject<E>> implements Cloneable 
 {
     @SuppressWarnings("unchecked")
     public E clone()

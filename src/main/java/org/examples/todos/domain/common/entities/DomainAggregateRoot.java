@@ -2,6 +2,7 @@ package org.examples.todos.domain.common.entities;
 
 import java.util.Objects;
 
+import org.examples.todos.domain.common.base.DomainObject;
 import org.examples.todos.domain.common.entities.rules.DomainAggregateWorkingRules;
 import org.examples.todos.domain.common.errors.DomainException;
 
@@ -11,7 +12,7 @@ public abstract class DomainAggregateRoot<
 	Info extends DomainEntityInfo<Id, Info>,
 	WorkingRules extends DomainAggregateWorkingRules,
 	Actor extends DomainEntity,
-	AggregateRoot extends CloneableEntity<AggregateRoot>
+	AggregateRoot extends DomainAggregateRoot<Id, Info, WorkingRules, Actor, AggregateRoot>
 
 > extends DomainEntity<Id, Info, AggregateRoot>
 {
@@ -50,14 +51,14 @@ public abstract class DomainAggregateRoot<
 	}
 
 	@Override
-	public void setInfo(Info newInfo) {
+	protected void setInfo(Info newInfo) {
 		
 		ensureActorCanChangeThis();
 		
 		super.setInfo(newInfo);
 	}
 	
-	protected void ensureActorCanChangeThis()
+	public void ensureActorCanChangeThis()
     {
     	if (Objects.isNull(actor))
     		return;
@@ -69,6 +70,11 @@ public abstract class DomainAggregateRoot<
     	
     	isInEditing = true;
     }
+	
+	public void ensureActorCanRemoveThis()
+	{
+		workingRules.getRemovingRule().ensureCanRemovedByActor(this, actor);
+	}
 	
 	protected WorkingRules workingRules()
 	{

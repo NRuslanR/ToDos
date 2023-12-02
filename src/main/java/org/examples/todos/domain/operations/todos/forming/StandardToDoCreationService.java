@@ -1,5 +1,7 @@
 package org.examples.todos.domain.operations.todos.forming;
 
+import java.util.UUID;
+
 import org.examples.todos.domain.actors.ToDo;
 import org.examples.todos.domain.actors.ToDoInfo;
 import org.examples.todos.domain.actors.ToDoList;
@@ -23,6 +25,8 @@ public class StandardToDoCreationService implements ToDoCreationService {
 		
 		ensureToDoCanCreatedForUser(toDoInfo, author);
 		
+		toDoInfo.setId(UUID.randomUUID());
+		
 		return toDoFormer.formToDo(toDoInfo, author);
 	}
 
@@ -32,6 +36,7 @@ public class StandardToDoCreationService implements ToDoCreationService {
 		
 		ensureCreatedToDoCountLimitNotReached(userToDoList, author);
 		ensureToDoNotCreatedYet(userToDoList, toDoInfo);
+		//ensureToDoParentExistIfNecessary(toDoInfo);
 	}
 
 	private void ensureCreatedToDoCountLimitNotReached(ToDoList userToDoList, User author) {

@@ -1,7 +1,7 @@
 package org.examples.todos.domain.resources.users;
 
 import org.examples.todos.domain.common.errors.DomainException;
-import org.examples.todos.domain.common.objectvalues.DomainValueObject;
+import org.examples.todos.domain.common.valueobjects.DomainValueObject;
 import org.examples.todos.shared.utils.StringUtils;
 
 public class UserName extends DomainValueObject<UserName> {

@@ -22,5 +22,14 @@ public class UserInfo extends DomainEntityInfo<UUID, UserInfo> {
 		
 		return new UserInfo();
 	}
-    
+
+	@Override
+	public UserInfo clone() {
+		
+		var clonedUserInfo = super.clone();
+		
+		clonedUserInfo.address = Optional.ofNullable(address.orElse(null));
+		
+		return clonedUserInfo;
+	}
 }

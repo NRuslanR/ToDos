@@ -29,4 +29,15 @@ public class ToDoInfo extends DomainEntityInfo<UUID, ToDoInfo> {
 		return new ToDoInfo();
 	}
 
+	@Override
+	public ToDoInfo clone() {
+		
+		var clonedToDoInfo = super.clone();
+		
+		clonedToDoInfo.parentToDoId = Optional.ofNullable(parentToDoId.orElse(null));
+		clonedToDoInfo.description = Optional.ofNullable(description.orElse(null));
+		clonedToDoInfo.performingDate = Optional.ofNullable(performingDate.orElse(null));
+		
+		return clonedToDoInfo;
+	}
 }

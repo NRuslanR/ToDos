@@ -1,2 +1,2 @@
-1) Think about to remove ToDoBaseInfo if optional fiels were introduced
+1) Introduce EntityId class and EntityIdCreationService
 2) Place right throws Exception class marks in domain classes' api

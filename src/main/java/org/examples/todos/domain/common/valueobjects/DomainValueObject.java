@@ -1,4 +1,4 @@
-package org.examples.todos.domain.common.objectvalues;
+package org.examples.todos.domain.common.valueobjects;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -6,7 +6,9 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public class DomainValueObject<T extends DomainValueObject<T>> {
+import org.examples.todos.domain.common.base.DomainObject;
+
+public class DomainValueObject<T extends DomainValueObject<T>> extends DomainObject<T> {
     
     public boolean equals(T other)
     {

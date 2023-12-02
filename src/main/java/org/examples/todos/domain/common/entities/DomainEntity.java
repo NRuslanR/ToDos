@@ -2,15 +2,15 @@ package org.examples.todos.domain.common.entities;
 
 import java.util.Objects;
 
+import org.examples.todos.domain.common.base.DomainObject;
 import org.examples.todos.domain.common.errors.DomainException;
 
-// refactor for equals, law of demeter
 public abstract class DomainEntity<
     Key, 
     Info extends DomainEntityInfo<Key, Info>,
-    Entity extends CloneableEntity<Entity>
+    Entity extends DomainEntity<Key, Info, Entity>
 
-> extends CloneableEntity<Entity> 
+> extends DomainObject<Entity> 
 {
     protected Info info;
 
@@ -26,7 +26,7 @@ public abstract class DomainEntity<
         return (Info)info.clone();
     }
 
-    public void setInfo(Info newInfo)
+    protected void setInfo(Info newInfo)
     {
         setId(newInfo.getId());
     }
@@ -76,4 +76,14 @@ public abstract class DomainEntity<
     {
         return super.toString();
     }
+
+	@Override
+	public Entity clone() {
+		
+		var clonedEntity = super.clone();
+		
+		clonedEntity.info = info.clone();
+		
+		return clonedEntity;
+	}
 }

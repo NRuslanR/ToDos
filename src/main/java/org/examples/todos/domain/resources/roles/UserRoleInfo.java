@@ -22,4 +22,13 @@ public class UserRoleInfo extends DomainEntityInfo<UUID, UserRoleInfo>
         return new UserRoleInfo();
     }
 
+	@Override
+	public UserRoleInfo clone() {
+		
+		var clonedUserRoleInfo = super.clone();
+		
+		clonedUserRoleInfo.description = Optional.of(description.orElse(null));
+		
+		return clonedUserRoleInfo;
+	}
 }

@@ -1,7 +1,7 @@
 package org.examples.todos.domain.resources.roles;
 
 import org.examples.todos.domain.common.errors.DomainException;
-import org.examples.todos.domain.common.objectvalues.DomainValueObject;
+import org.examples.todos.domain.common.valueobjects.DomainValueObject;
 
 public class UserRoleClaims extends DomainValueObject<UserRoleClaims> {
     

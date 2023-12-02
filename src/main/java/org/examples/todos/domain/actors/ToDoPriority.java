@@ -1,7 +1,7 @@
 package org.examples.todos.domain.actors;
 
 import org.examples.todos.domain.common.errors.DomainException;
-import org.examples.todos.domain.common.objectvalues.DomainValueObject;
+import org.examples.todos.domain.common.valueobjects.DomainValueObject;
 
 public class ToDoPriority extends DomainValueObject<ToDoPriority> {
     
