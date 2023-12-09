@@ -1,13 +1,15 @@
 package org.examples.todos.domain.resources.roles;
 
+import java.util.Objects;
 import java.util.UUID;
 
+import org.examples.todos.domain.common.base.Intention;
 import org.examples.todos.domain.common.entities.DomainEntity;
 import org.examples.todos.domain.common.errors.DomainException;
 import org.examples.todos.shared.utils.StringUtils;
 
-public class UserRole extends DomainEntity<UUID, UserRoleInfo, UserRole> {
-
+public class UserRole extends DomainEntity<UUID, UserRoleInfo, UserRole> 
+{
     public UserRole(UserRoleInfo fullInfo)
     {
         super(fullInfo);
@@ -21,11 +23,18 @@ public class UserRole extends DomainEntity<UUID, UserRoleInfo, UserRole> {
         setName(newInfo.getName());
         setClaims(newInfo.getClaims());
         
-        if (newInfo.getDescription().isPresent())
-        	setDescription(newInfo.getDescription().get());
+        setDescription(newInfo.getDescription());
     }
 
-    public String getName()
+    private void setDescription(Intention<String> description) 
+    {
+    	if (!Objects.isNull(description))
+    		setDescription(description.getValue());
+    	
+    	else info.setDescription(Intention.of(""));
+	}
+
+	public String getName()
     {
         return info.getName();
     }
@@ -40,19 +49,19 @@ public class UserRole extends DomainEntity<UUID, UserRoleInfo, UserRole> {
         info.setName(name);
     }
 
-    private boolean isNameCorrect(String value) {
-
+    private boolean isNameCorrect(String value) 
+    {
         return StringUtils.hasText(value);
     }
 
     public String getDescription()
     {
-        return info.getDescription().orElse("");
+        return info.getDescription().getValue();
     }
 
     public void setDescription(String description)
     {
-        this.setDescription(description);
+        info.setDescription(Intention.of(description));
     }
 
     public UserRoleClaims getClaims()

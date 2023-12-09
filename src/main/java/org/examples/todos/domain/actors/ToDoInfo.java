@@ -1,9 +1,10 @@
 package org.examples.todos.domain.actors;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.UUID;
 
+import org.examples.todos.domain.common.base.Intention;
 import org.examples.todos.domain.common.entities.DomainEntityInfo;
 import org.examples.todos.domain.resources.users.User;
 
@@ -12,32 +13,46 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class ToDoInfo extends DomainEntityInfo<UUID, ToDoInfo> {
-    
+public class ToDoInfo extends DomainEntityInfo<UUID, ToDoInfo> 
+{  
 	private String name; 
     private ToDoPriority priority;
 	private LocalDateTime creationDate;
     private User author;
     
-    private Optional<UUID> parentToDoId;
-	private Optional<String> description;
-	private Optional<LocalDateTime> performingDate;
+    private Intention<UUID> parentToDoId;
+	private Intention<String> description;
+	private Intention<LocalDateTime> performingDate;
+	private Intention<ToDoNoteList> notes;
 	
 	@Override
-	public ToDoInfo newFullInfoInstance() {
-		
+	public ToDoInfo newFullInfoInstance() 
+	{
 		return new ToDoInfo();
 	}
 
 	@Override
-	public ToDoInfo clone() {
-		
+	public ToDoInfo clone() 
+	{
 		var clonedToDoInfo = super.clone();
 		
-		clonedToDoInfo.parentToDoId = Optional.ofNullable(parentToDoId.orElse(null));
-		clonedToDoInfo.description = Optional.ofNullable(description.orElse(null));
-		clonedToDoInfo.performingDate = Optional.ofNullable(performingDate.orElse(null));
+		if (!Objects.isNull(parentToDoId))
+			clonedToDoInfo.parentToDoId = Intention.of(parentToDoId.getValue());
 		
+		if (!Objects.isNull(description))
+			clonedToDoInfo.description = Intention.of(description.getValue());
+		
+		if (!Objects.isNull(performingDate))
+			clonedToDoInfo.performingDate = Intention.of(performingDate.getValue());
+		
+		if (!Objects.isNull(notes))
+		{
+			if (!Objects.isNull(notes.getValue()))
+				clonedToDoInfo.notes = Intention.of(notes.getValue().clone());
+			
+			else clonedToDoInfo.notes = Intention.<ToDoNoteList>of(null);
+		}
+			
 		return clonedToDoInfo;
 	}
 }

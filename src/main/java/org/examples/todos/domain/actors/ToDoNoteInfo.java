@@ -17,8 +17,8 @@ public class ToDoNoteInfo extends DomainEntityInfo<UUID, ToDoNoteInfo>
     private LocalDateTime createdAt;
     
 	@Override
-	public ToDoNoteInfo newFullInfoInstance() {
-		
+	public ToDoNoteInfo newFullInfoInstance() 
+	{	
 		return new ToDoNoteInfo();
 	}
 }

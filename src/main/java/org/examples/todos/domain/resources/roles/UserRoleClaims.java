@@ -3,8 +3,8 @@ package org.examples.todos.domain.resources.roles;
 import org.examples.todos.domain.common.errors.DomainException;
 import org.examples.todos.domain.common.valueobjects.DomainValueObject;
 
-public class UserRoleClaims extends DomainValueObject<UserRoleClaims> {
-    
+public class UserRoleClaims extends DomainValueObject<UserRoleClaims> 
+{
     private int allowedToDoCreationCount;
     private int allowedToDoNoteCreationCount;
     private boolean canEditForeignToDos;

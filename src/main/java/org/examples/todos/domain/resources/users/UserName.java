@@ -4,8 +4,8 @@ import org.examples.todos.domain.common.errors.DomainException;
 import org.examples.todos.domain.common.valueobjects.DomainValueObject;
 import org.examples.todos.shared.utils.StringUtils;
 
-public class UserName extends DomainValueObject<UserName> {
-    
+public class UserName extends DomainValueObject<UserName> 
+{    
     private String firstName;
 	private String middleName;
 	private String lastName;
@@ -67,8 +67,8 @@ public class UserName extends DomainValueObject<UserName> {
         return firstName() + " " + middleName() + " " + lastName();
     }
 
-    private boolean isFullNamePartCorrect(String value) {
-        
+    private boolean isFullNamePartCorrect(String value) 
+    {
         return StringUtils.hasText(value);
     }
 

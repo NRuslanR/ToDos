@@ -9,8 +9,9 @@ import java.util.stream.Collectors;
 import org.examples.todos.domain.common.errors.DomainException;
 import org.examples.todos.domain.common.valueobjects.DomainValueObject;
 
-public class ToDoList extends DomainValueObject<ToDoList> implements Iterable<ToDo>  {
-
+@SuppressWarnings("unused")
+public class ToDoList extends DomainValueObject<ToDoList> implements Iterable<ToDo>  
+{
 	private List<ToDo> toDoList;
 	
 	public static ToDoList of(Iterable<ToDo> toDos)
@@ -18,8 +19,8 @@ public class ToDoList extends DomainValueObject<ToDoList> implements Iterable<To
 		return new ToDoList(toDos);
 	}
 	
-	public static ToDoList of(ToDo toDo) {
-		
+	public static ToDoList of(ToDo toDo) 
+	{	
 		return new ToDoList(toDo);
 	}
 
@@ -43,10 +44,9 @@ public class ToDoList extends DomainValueObject<ToDoList> implements Iterable<To
 	}
 	
 	@Override
-	public Iterator<ToDo> iterator() {
-		
-		return toDoList.iterator();
-		
+	public Iterator<ToDo> iterator() 
+	{		
+		return toDoList.iterator();	
 	}
 	
 	public void addAll(Iterable<ToDo> toDos)
@@ -89,9 +89,8 @@ public class ToDoList extends DomainValueObject<ToDoList> implements Iterable<To
 		var subToDos =
 			toDoList
 				.stream()
-				.filter(
-					item -> item.getParentToDoId().equals(toDo.getId())
-				).collect(Collectors.toList());
+				.filter(item -> item.getParentToDoId().equals(toDo.getId()))
+				.toList();
 		
 		return ToDoList.of(subToDos);
 	}
@@ -110,5 +109,11 @@ public class ToDoList extends DomainValueObject<ToDoList> implements Iterable<To
 		var otherToDoList = (ToDoList)other;
 		
 		return toDoList.equals(otherToDoList.toDoList);
+	}
+
+	@Override
+	public ToDoList clone() 
+	{
+		return new ToDoList(toDoList.stream().map(ToDo::clone).toList());
 	}
 }

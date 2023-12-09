@@ -2,9 +2,9 @@ package org.examples.todos.domain.actors;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
+import org.examples.todos.domain.common.base.Intention;
 import org.examples.todos.domain.common.entities.DomainAggregateRoot;
 import org.examples.todos.domain.common.errors.DomainException;
 import org.examples.todos.domain.resources.users.User;
@@ -19,9 +19,8 @@ public class ToDo extends DomainAggregateRoot<
 	ToDo
 > 
 {
-	private ToDoNoteList notes = new ToDoNoteList();
-
-	public ToDo(ToDoInfo Info, ToDoWorkingRules workingRules, User actor) {
+	public ToDo(ToDoInfo Info, ToDoWorkingRules workingRules, User actor) 
+	{
 		super(Info, workingRules, actor);
 	}
 
@@ -35,36 +34,66 @@ public class ToDo extends DomainAggregateRoot<
     	setName(newInfo.getName()); 	
     	setPriority(newInfo.getPriority());
     	
-    	// refactor: remove
-    	if (newInfo.getParentToDoId().isPresent())
-    		setParentToDoId(newInfo.getParentToDoId().get());
-    	
-    	if (newInfo.getDescription().isPresent())
-    		setDescription(newInfo.getDescription().get());
-    	
-    	if (newInfo.getPerformingDate().isPresent())
-    		setPerformingDate(newInfo.getPerformingDate().get());
+    	setParentToDoId(newInfo.getParentToDoId());
+    	setDescription(newInfo.getDescription());
+    	setPerformingDate(newInfo.getPerformingDate());
+    	setNotes(newInfo.getNotes());
     }
-   
-	public UUID getParentToDoId()
-	{
-	    return info.getParentToDoId().orElse(null);
+
+	private void setParentToDoId(Intention<UUID> value) 
+	{		
+		if (!Objects.isNull(value))
+			setParentToDoId(value.getValue());
+		
+		else info.setParentToDoId(Intention.of(null));
 	}
 
-	// turn parent todo id to to-do link (ToDoLinkCreationService)
-    public void setParentToDoId(UUID parentToDoId)
+	private void setDescription(Intention<String> value) 
+	{	
+		if (!Objects.isNull(value))
+			setDescription(value.getValue());
+		
+		else info.setDescription(Intention.of(null));
+	}
+
+	private void setPerformingDate(Intention<LocalDateTime> value) 
+	{	
+		if (!Objects.isNull(value))
+			setPerformingDate(value.getValue());
+		
+		else info.setPerformingDate(Intention.of(null));
+	}
+
+	private void setNotes(Intention<ToDoNoteList> value) 
+	{	
+		if (!Objects.isNull(value))
+    		setNotes(value.getValue());	
+		
+		else info.setNotes(Intention.of(new ToDoNoteList()));
+	}
+
+	public UUID getParentToDoId()
+	{
+	    return info.getParentToDoId().getValue();
+	}
+
+    public void setParentToDoId(UUID newParentToDoId)
     {
     	ensureActorCanChangeThis();
     	
-        if (!Objects.isNull(getParentToDoId()))
-        {
-            throw new DomainException(
-                "To-Do \"" + getName() + 
-                "\" is already assigned parent To-Do"
-            );
-        }
-
-        info.setParentToDoId(Optional.ofNullable(parentToDoId));
+    	if (Objects.isNull(newParentToDoId))
+    	{
+    		throw new DomainException("Attempt to assign non-existent parent To-Do");
+    	}
+    	
+        info.setParentToDoId(Intention.of(newParentToDoId));
+    }
+    
+    public void resetParentToDo()
+    {
+    	ensureActorCanChangeThis();
+    	
+    	info.setParentToDoId(Intention.of(null));
     }
 
     public String getName()
@@ -84,21 +113,21 @@ public class ToDo extends DomainAggregateRoot<
         info.setName(name);
     }
 
-    private boolean isNameCorrect(String name) {
-
+    private boolean isNameCorrect(String name) 
+    {
         return StringUtils.hasText(name);
     }
 
     public String getDescription()
     {
-        return info.getDescription().orElse("");
+        return info.getDescription().getValue();
     }
 
     public void setDescription(String description)
     {
     	ensureActorCanChangeThis();
     	
-        info.setDescription(Optional.of(description));
+        info.setDescription(Intention.of(!Objects.isNull(description) ? description : ""));
     }
 
     public ToDoPriority getPriority()
@@ -106,7 +135,7 @@ public class ToDo extends DomainAggregateRoot<
         return info.getPriority();
     }
 
-    public void changePriorityType(ToDoPriorityType priorityType)
+    public void setPriorityType(ToDoPriorityType priorityType)
     {
     	ensureActorCanChangeThis();
     	
@@ -115,7 +144,7 @@ public class ToDo extends DomainAggregateRoot<
         setPriority(newPriority);
     }
 
-    public void changePriorityValue(float value)
+    public void setPriorityValue(float value)
     {
     	ensureActorCanChangeThis();
     	
@@ -145,7 +174,10 @@ public class ToDo extends DomainAggregateRoot<
     {
     	if (!Objects.isNull(getCreationDate()))
     	{
-    		throw new DomainException("To-Do \"" + getName() + "\"'s creation date is already performed");
+    		throw new DomainException(
+    			"To-Do \"" + getName() + 
+    			"\"'s creation date is already performed"
+    		);
     	}
     	
         info.setCreationDate(creationDate);
@@ -173,7 +205,7 @@ public class ToDo extends DomainAggregateRoot<
 
     public ToDoNoteInfo getNoteInfo(UUID noteId)
     {
-        ToDoNote note = notes.getById(noteId);
+        ToDoNote note = notes().getById(noteId);
 
         return note.getInfo();
     }
@@ -182,24 +214,21 @@ public class ToDo extends DomainAggregateRoot<
     {
     	ensureActorCanAddNote(note);
     	
-        notes.add(note.clone());    
+        notes().add(note.clone());    
     }
 
-    private void ensureActorCanAddNote(ToDoNote note) {
-		
-    	ensureActorCanChangeThis();
-    	
-    	if (actor().getAllowedToDoNoteCreationCount() >= notes.count())
-    	{
-    		throw new DomainException("The created To-Do note count limit is reached");
-    	}
+    private void ensureActorCanAddNote(ToDoNote note) 
+    {	
+    	workingRules()
+    		.getChangingRule()
+    			.ensureUserCanAssignNewToDoNote(actor(), this);
 	}
 
 	public void changeNote(ToDoNoteInfo noteInfo)
     {
     	ensureActorCanChangeThis();
     	
-        ToDoNote note = notes.getById(noteInfo.getId());
+        ToDoNote note = notes().getById(noteInfo.getId());
 
         note.setInfo(noteInfo);
     }
@@ -208,7 +237,7 @@ public class ToDo extends DomainAggregateRoot<
     {
     	ensureActorCanChangeThis();
     	
-        notes.removeById(noteId);   
+        notes().removeById(noteId);   
     }
     
     public void perform()
@@ -223,14 +252,14 @@ public class ToDo extends DomainAggregateRoot<
     	setPerformingDate(performingDateTime);
     }
 
-    private void ensureActorCanPerformThis() {
-		
+    private void ensureActorCanPerformThis() 
+    {
     	workingRules().getPerformingRule().ensureToDoCanPerformedByUser(this, actor());
 	}
     
 	public LocalDateTime getPerformingDate()
     {
-        return info.getPerformingDate().orElse(null);
+        return info.getPerformingDate().getValue();
     }
 	
 	public void performByOverlapping(ToDo overlappingToDo)
@@ -240,8 +269,8 @@ public class ToDo extends DomainAggregateRoot<
 		setPerformingDate(overlappingToDo.getPerformingDate());
 	}
 	
-    private void ensureThisPerformingCanBeOverlappedBy(ToDo overlappingToDo) {
-		
+    private void ensureThisPerformingCanBeOverlappedBy(ToDo overlappingToDo) 
+    {	
 		workingRules()
 			.getOverlappingPerformingRule()
 				.ensureToDoPerformingCanBeOverlappedByOther(this, overlappingToDo, actor());
@@ -258,7 +287,7 @@ public class ToDo extends DomainAggregateRoot<
         
         if (Objects.isNull(performingDate))
         {
-        	throw new DomainException("To-Do's performing isn't assigned");
+        	throw new DomainException("To-Do's performing date isn't assigned");
         }
         
         if (performingDate.isBefore(info.getCreationDate()))
@@ -266,21 +295,51 @@ public class ToDo extends DomainAggregateRoot<
         	throw new DomainException("To-Do \"" + getName() + "\"'s performing date can't be earlier than creation date");
         }
 
-        info.setPerformingDate(Optional.of(performingDate));
+        info.setPerformingDate(Intention.of(performingDate));
     }
-    
+	
     public boolean isPerformed()
     {
     	return !Objects.isNull(getPerformingDate());
     }
     
     @Override
-	public ToDo clone() {
-		
+	public ToDo clone() 
+    {
 		var clonedToDo = super.clone();
 		
-		clonedToDo.notes = notes.clone();
+		clonedToDo.setNotes(notes().clone());
 						
 		return clonedToDo;
+	}
+    
+    public ToDoNoteList getNotes()
+    {
+    	return notes().clone();
+    }
+    
+    private ToDoNoteList notes()
+    {
+    	return info.getNotes().getValue();
+    }
+    
+    private void setNotes(ToDoNoteList newNotes)
+	{
+		if (Objects.isNull(newNotes))
+		{
+			throw new DomainException("Attempt to assign the non-existent To-Do note list");
+		}
+		
+		info.setNotes(Intention.of(newNotes.clone()));
+	}
+    
+    @Override
+	protected void ensureValidCreation() 
+    {
+		super.ensureValidCreation();
+		
+		workingRules()
+			.getChangingRule()
+				.ensureToDoNoteListValid(info.getNotes().getValue(), actor());
 	}
 }

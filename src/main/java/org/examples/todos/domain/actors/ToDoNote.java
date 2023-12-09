@@ -8,8 +8,8 @@ import org.examples.todos.domain.common.entities.DomainEntity;
 import org.examples.todos.domain.common.errors.DomainException;
 import org.examples.todos.shared.utils.StringUtils;
 
-public class ToDoNote extends DomainEntity<UUID, ToDoNoteInfo, ToDoNote> {
-    
+public class ToDoNote extends DomainEntity<UUID, ToDoNoteInfo, ToDoNote> 
+{
     public ToDoNote(ToDoNoteInfo info)
     {
     	super(info);

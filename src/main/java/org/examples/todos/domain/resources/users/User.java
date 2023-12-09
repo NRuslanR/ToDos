@@ -1,15 +1,15 @@
 package org.examples.todos.domain.resources.users;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
+import org.examples.todos.domain.common.base.Intention;
 import org.examples.todos.domain.common.entities.DomainEntity;
 import org.examples.todos.domain.common.errors.DomainException;
 import org.examples.todos.domain.resources.roles.UserRole;
 
-public class User extends DomainEntity<UUID, UserInfo, User> {
-    
+public class User extends DomainEntity<UUID, UserInfo, User> 
+{
 	public User(UserInfo info)
 	{
 		super(info);
@@ -23,11 +23,18 @@ public class User extends DomainEntity<UUID, UserInfo, User> {
 		setName(newInfo.getName());
 		setRole(newInfo.getRole());
 		
-		if (newInfo.getAddress().isPresent())
-			setAddress(newInfo.getAddress().get());
+		setAddress(newInfo.getAddress());
 	}
 
-    public String getFirstName()
+    private void setAddress(Intention<UserAddress> address) 
+    {	
+    	if (!Objects.isNull(address))
+    		setAddress(address.getValue());
+		
+    	else info.setAddress(Intention.of(null));
+	}
+
+	public String getFirstName()
     {
         return info.getName().firstName();
     }
@@ -62,8 +69,8 @@ public class User extends DomainEntity<UUID, UserInfo, User> {
         return info.getName().fullName();
     }
 
-    private void setName(UserName name) {
-
+    private void setName(UserName name) 
+    {
         if (Objects.isNull(name))
         {
             throw new DomainException("User's name info can'be empty");
@@ -74,26 +81,26 @@ public class User extends DomainEntity<UUID, UserInfo, User> {
 
     public UserAddress getAddress()
     {
-        return info.getAddress().orElse(null);
+        return info.getAddress().getValue();
     }
     
-    public void setAddress(UserAddress address) {
-
+    public void setAddress(UserAddress address) 
+    {
         if (Objects.isNull(address))
         {
             throw new DomainException("User's address info can'be empty");
         }
 
-        info.setAddress(Optional.of(address));
+        info.setAddress(Intention.of(address));
     }
 
     public UserRole getRole()
     {
-        return this.getRole();
+        return info.getRole();
     }
 
-    public void setRole(UserRole role) {
-
+    public void setRole(UserRole role) 
+    {
         if (Objects.isNull(role))
         {
             throw new DomainException("User's role info can'be empty");

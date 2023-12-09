@@ -26,6 +26,8 @@ public abstract class DomainAggregateRoot<
 		
 		setWorkingRules(workingRules);
 		setActorByWorkingRules(actor, workingRules);
+		
+		ensureValidCreation();
 	}
 
 	private void setWorkingRules(WorkingRules workingRules) {
@@ -48,6 +50,10 @@ public abstract class DomainAggregateRoot<
 		workingRules.getViewingRule().ensureCanViewedByActor(this, actor);
 		
 		this.actor = actor;
+	}
+	
+	protected void ensureValidCreation() {
+		
 	}
 
 	@Override

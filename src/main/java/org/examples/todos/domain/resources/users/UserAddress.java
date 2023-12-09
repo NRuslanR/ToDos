@@ -4,8 +4,8 @@ import org.examples.todos.domain.common.errors.DomainException;
 import org.examples.todos.domain.common.valueobjects.DomainValueObject;
 import org.examples.todos.shared.utils.StringUtils;
 
-public class UserAddress extends DomainValueObject<UserAddress> {
-    
+public class UserAddress extends DomainValueObject<UserAddress> 
+{   
     private String street;
     private String house;
     private String room;

@@ -36,8 +36,8 @@ public class ToDoNoteList
     }
     
     @Override
-    public Iterator<ToDoNote> iterator() {
-        
+    public Iterator<ToDoNote> iterator() 
+    {
         return toDoNoteList.iterator();
     }
     
@@ -119,8 +119,8 @@ public class ToDoNoteList
         return toDoNoteList.equals(otherToDoNoteList.toDoNoteList);
     }
 
-    public void removeByName(String noteName) {
-
+    public void removeByName(String noteName) 
+    {
         removeByCondition(note -> note.getName().equals(noteName));
     }
 
@@ -140,8 +140,8 @@ public class ToDoNoteList
     }
 
 	@Override
-	public ToDoNoteList clone() {
-		
-		return new ToDoNoteList(this);
+	public ToDoNoteList clone() 
+	{	
+		return new ToDoNoteList(toDoNoteList.stream().map(ToDoNote::clone).toList());
 	} 
 }
