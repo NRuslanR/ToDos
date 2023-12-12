@@ -9,16 +9,14 @@ import org.examples.todos.domain.common.errors.DomainException;
 import org.examples.todos.domain.decisionsupport.search.ToDoFinder;
 import org.examples.todos.domain.resources.users.User;
 
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public class StandardToDoCreationService implements ToDoCreationService {
 
 	private final ToDoFinder toDoFinder;
 	private final ToDoFormer toDoFormer;
-	
-	public StandardToDoCreationService(ToDoFinder toDoFinder, ToDoFormer toDoFormer)
-	{
-		this.toDoFinder = toDoFinder;
-		this.toDoFormer = toDoFormer;
-	}
 	
 	@Override
 	public ToDo createToDoFor(ToDoInfo toDoInfo, User author) throws DomainException {
@@ -36,7 +34,6 @@ public class StandardToDoCreationService implements ToDoCreationService {
 		
 		ensureCreatedToDoCountLimitNotReached(userToDoList, author);
 		ensureToDoNotCreatedYet(userToDoList, toDoInfo);
-		//ensureToDoParentExistIfNecessary(toDoInfo);
 	}
 
 	private void ensureCreatedToDoCountLimitNotReached(ToDoList userToDoList, User author) {
