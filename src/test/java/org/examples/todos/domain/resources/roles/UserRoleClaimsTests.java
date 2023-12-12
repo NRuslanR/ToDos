@@ -15,7 +15,7 @@ public class UserRoleClaimsTests
 {
 	@ParameterizedTest
 	@MethodSource("validUserRoleClaimsInput")
-	public void shouldBeCorrectUserRoleClaimsIfInputValid(
+	public void shouldBe_CorrectUserRoleClaims_IfInputValid(
 		int allowedToDoCreationCount, 
 		int allowedToDoNoteCreationCount,
 		Boolean canEditForeignToDos,
@@ -44,7 +44,7 @@ public class UserRoleClaimsTests
 	}
 	
 	@Test
-	public void shouldRaiseErrorIfAllowedToDoCreationCountNegative()
+	public void Raise_Error_IfAllowedToDoCreationCountNegative()
 	{
 		assertThrows(DomainException.class, () -> {
 		
@@ -54,7 +54,7 @@ public class UserRoleClaimsTests
 	}
 	
 	@Test
-	public void shouldRaiseErrorIfAllowedToDoNoteCreationCountNegative()
+	public void Raise_Error_IfAllowedToDoNoteCreationCountNegative()
 	{
 		assertThrows(DomainException.class, () -> {
 			

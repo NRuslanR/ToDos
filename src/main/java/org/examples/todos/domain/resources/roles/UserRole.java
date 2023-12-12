@@ -71,6 +71,11 @@ public class UserRole extends DomainEntity<UUID, UserRoleInfo, UserRole>
 
     public void setClaims(UserRoleClaims claims) 
     {
+    	if (Objects.isNull(claims))
+    	{
+    		throw new DomainException("UserRole's claims must be assigned");
+    	}
+    	
         info.setClaims(claims);
     }
 
