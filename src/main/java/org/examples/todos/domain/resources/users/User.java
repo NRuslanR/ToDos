@@ -36,37 +36,42 @@ public class User extends DomainEntity<UUID, UserInfo, User>
 
 	public String getFirstName()
     {
-        return info.getName().firstName();
+        return getName().firstName();
     }
 
     public void setFirstName(String firstName)
     {
-        setName(info.getName().changeFirstName(firstName));
+        setName(getName().changeFirstName(firstName));
     }
 
     public String getMiddleName()
     {
-        return info.getName().middleName();
+        return getName().middleName();
     }
 
     public void setMiddleName(String middleName)
     {
-        setName(info.getName().changeMiddleName(middleName));
+        setName(getName().changeMiddleName(middleName));
     }
 
     public String getLastName()
     {
-        return info.getName().lastName();
+        return getName().lastName();
     }
 
     public void setLastName(String lastName)
     {
-        setName(info.getName().changeLastName(lastName));
+        setName(getName().changeLastName(lastName));
     }
 
     public String getFullName()
     {
-        return info.getName().fullName();
+        return getName().fullName();
+    }
+    
+    public UserName getName()
+    {
+    	return info.getName();
     }
 
     private void setName(UserName name) 

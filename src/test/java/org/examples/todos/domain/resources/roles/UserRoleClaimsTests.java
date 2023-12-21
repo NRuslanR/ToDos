@@ -1,11 +1,11 @@
 package org.examples.todos.domain.resources.roles;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.stream.Stream;
 
 import org.examples.todos.domain.common.errors.DomainException;
-import org.examples.todos.domain.resources.roles.UserRoleClaims;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -15,21 +15,24 @@ public class UserRoleClaimsTests
 {
 	@ParameterizedTest
 	@MethodSource("validUserRoleClaimsInput")
-	public void shouldBe_CorrectUserRoleClaims_IfInputValid(
+	public void should_Be_Created_CorrectUserRoleClaims_When_AllClaimsValid(
 		int allowedToDoCreationCount, 
 		int allowedToDoNoteCreationCount,
-		Boolean canEditForeignToDos,
+		boolean canEditForeignToDos,
 		boolean canRemoveForeignToDos)
 	{
-		assertDoesNotThrow(() -> {;
-		
+		var userRoleClaims =
 			new UserRoleClaims(
 				allowedToDoCreationCount, 
 				allowedToDoNoteCreationCount, 
-				canRemoveForeignToDos, 
+				canEditForeignToDos, 
 				canRemoveForeignToDos
 			);
-		});
+		
+		assertEquals(allowedToDoCreationCount, userRoleClaims.allowedToDoCreationCount());
+		assertEquals(allowedToDoNoteCreationCount, userRoleClaims.allowedToDoNoteCreationCount());
+		assertEquals(canEditForeignToDos, userRoleClaims.canEditForeignToDos());
+		assertEquals(canRemoveForeignToDos, userRoleClaims.canRemoveForeignToDos());
 	}
 	
 	private static Stream<Arguments> validUserRoleClaimsInput()
@@ -44,7 +47,7 @@ public class UserRoleClaimsTests
 	}
 	
 	@Test
-	public void Raise_Error_IfAllowedToDoCreationCountNegative()
+	public void should_ThrowException_When_AllowedToDoCreationCountNegative()
 	{
 		assertThrows(DomainException.class, () -> {
 		
@@ -54,7 +57,7 @@ public class UserRoleClaimsTests
 	}
 	
 	@Test
-	public void Raise_Error_IfAllowedToDoNoteCreationCountNegative()
+	public void should_ThrowException_When_AllowedToDoNoteCreationCountNegative()
 	{
 		assertThrows(DomainException.class, () -> {
 			

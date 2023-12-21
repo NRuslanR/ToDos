@@ -16,6 +16,15 @@ public class ToDoNoteInfo extends DomainEntityInfo<UUID, ToDoNoteInfo>
     private String text;
     private LocalDateTime createdAt;
     
+    public ToDoNoteInfo(UUID id, String name, String text, LocalDateTime createdAt)
+    {
+    	super(id);
+    	
+    	setName(name);
+    	setText(text);
+    	setCreatedAt(createdAt);
+    }
+    
 	@Override
 	public ToDoNoteInfo newFullInfoInstance() 
 	{	

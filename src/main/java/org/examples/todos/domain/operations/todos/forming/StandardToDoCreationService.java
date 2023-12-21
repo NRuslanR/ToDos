@@ -1,5 +1,6 @@
 package org.examples.todos.domain.operations.todos.forming;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.examples.todos.domain.actors.ToDo;
@@ -9,7 +10,6 @@ import org.examples.todos.domain.common.errors.DomainException;
 import org.examples.todos.domain.decisionsupport.search.ToDoFinder;
 import org.examples.todos.domain.resources.users.User;
 
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -23,9 +23,9 @@ public class StandardToDoCreationService implements ToDoCreationService {
 		
 		ensureToDoCanCreatedForUser(toDoInfo, author);
 		
-		toDoInfo.setId(UUID.randomUUID());
-		
-		return toDoFormer.formToDo(toDoInfo, author);
+		var sanitizedToDoInfo = sanitizeToDoInfo(toDoInfo);
+
+		return toDoFormer.formToDo(sanitizedToDoInfo, author);
 	}
 
 	private void ensureToDoCanCreatedForUser(ToDoInfo toDoInfo, User author) {
@@ -52,5 +52,16 @@ public class StandardToDoCreationService implements ToDoCreationService {
 		}
 		
 	}
-
+	
+	private ToDoInfo sanitizeToDoInfo(ToDoInfo toDoInfo) {
+		
+		var sanitizedToDoInfo = toDoInfo.clone();
+		
+		sanitizedToDoInfo.setId(UUID.randomUUID());
+		sanitizedToDoInfo.setCreationDate(LocalDateTime.now());
+		sanitizedToDoInfo.setParentToDoId(null);
+		sanitizedToDoInfo.setPerformingDate(null);
+		
+		return sanitizedToDoInfo;
+	}
 }

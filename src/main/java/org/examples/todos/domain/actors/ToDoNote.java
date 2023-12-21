@@ -72,6 +72,11 @@ public class ToDoNote extends DomainEntity<UUID, ToDoNoteInfo, ToDoNote>
 
     private void setCreatedAt(LocalDateTime createdAt)
     {
+    	if (Objects.isNull(createdAt))
+    	{
+    		throw new DomainException("To-Do note's creation date must be assigned");
+    	}
+    	
         if (!Objects.isNull(info.getCreatedAt()))
         {
             throw new DomainException("To-Do note's creation date can't be changed");
