@@ -18,6 +18,21 @@ public class UserInfo extends DomainEntityInfo<UUID, UserInfo>
     private UserRole role;
     private Intention<UserAddress> address;
     
+    public UserInfo(UUID id, UserName name, UserRole role, UserAddress address)
+    {
+    	this(id, name, role);
+    	
+    	setAddress(Intention.of(address));
+    }
+    
+    public UserInfo(UUID id, UserName name, UserRole role)
+    {
+    	super(id);
+    	
+    	setName(name);
+    	setRole(role);
+    }
+    
 	@Override
 	public UserInfo newFullInfoInstance() 
 	{	

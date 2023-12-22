@@ -25,6 +25,36 @@ public class ToDoInfo extends DomainEntityInfo<UUID, ToDoInfo>
 	private Intention<LocalDateTime> performingDate;
 	private Intention<ToDoNoteList> notes;
 	
+	public ToDoInfo(
+		UUID id, 
+		String name, 
+		ToDoPriority priority, 
+		LocalDateTime creationDate, 
+		User author,
+		Intention<UUID> parentToDoId,
+		Intention<String> description,
+		Intention<LocalDateTime> performingDate,
+		Intention<ToDoNoteList> notes
+	)
+	{
+		this(id, name, priority, creationDate, author);
+		
+		setParentToDoId(parentToDoId);
+		setDescription(description);
+		setPerformingDate(performingDate);
+		setNotes(notes);
+	}
+	
+	public ToDoInfo(UUID id, String name, ToDoPriority priority, LocalDateTime creationDate, User author)
+	{
+		super(id);
+		
+		setName(name);
+		setPriority(priority);
+		setCreationDate(creationDate);
+		setAuthor(author);
+	}
+	
 	@Override
 	public ToDoInfo newFullInfoInstance() 
 	{

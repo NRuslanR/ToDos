@@ -162,7 +162,7 @@ public class ToDo extends DomainAggregateRoot<
             throw new DomainException("To-Do's priority info can'be empty");
         }
 
-        this.setPriority(priority);
+        info.setPriority(priority);
     }
 
     public LocalDateTime getCreationDate()
@@ -200,7 +200,7 @@ public class ToDo extends DomainAggregateRoot<
             throw new DomainException("To-Do's author info can't be empty");
         }
 
-        this.setAuthor(author);
+        info.setAuthor(author);
     }
 
     public ToDoNoteInfo getNoteInfo(UUID noteId)
