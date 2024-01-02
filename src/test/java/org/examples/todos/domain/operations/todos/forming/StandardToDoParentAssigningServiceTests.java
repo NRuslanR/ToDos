@@ -21,6 +21,7 @@ import org.examples.todos.domain.resources.roles.UserRoleInfo;
 import org.examples.todos.domain.resources.users.User;
 import org.examples.todos.domain.resources.users.UserInfo;
 import org.examples.todos.domain.resources.users.UserName;
+import org.examples.todos.domain.resources.users.UserTestUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -130,18 +131,6 @@ public class StandardToDoParentAssigningServiceTests
 	
 	private static User createTestToDoAuthor()
 	{
-		return new User(
-			new UserInfo(
-				UUID.randomUUID(), 
-				new UserName("a", "b", "c"), 
-				new UserRole(
-					new UserRoleInfo(
-						UUID.randomUUID(), 
-						"a", 
-						new UserRoleClaims(0, 0, false, false)
-					)
-				)			
-			)
-		);
+		return UserTestUtils.createSimpleUserWithResetClaims();
 	}
 }

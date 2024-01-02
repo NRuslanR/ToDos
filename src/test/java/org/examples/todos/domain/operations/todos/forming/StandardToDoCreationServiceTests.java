@@ -28,6 +28,7 @@ import org.examples.todos.domain.resources.roles.UserRoleInfo;
 import org.examples.todos.domain.resources.users.User;
 import org.examples.todos.domain.resources.users.UserInfo;
 import org.examples.todos.domain.resources.users.UserName;
+import org.examples.todos.domain.resources.users.UserTestUtils;
 import org.examples.todos.domain.rules.todos.access.ToDoNoteCreationCountLimitReachedException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -152,19 +153,7 @@ public class StandardToDoCreationServiceTests
 	
 	private static User createTestToDoActor() {
 		
-		return new User(
-			new UserInfo(
-				UUID.randomUUID(), 
-				new UserName("a", "b", "c"), 
-				new UserRole(
-					new UserRoleInfo(
-						UUID.randomUUID(), 
-						"a", 
-						new UserRoleClaims(3, 2, false, false)
-					)
-				)
-			)
-		);
+		return UserTestUtils.createSimpleUserWithClaims(3, 2, false, false);
 	}
 
 	private static ToDoList createTestToDoList(User author) {

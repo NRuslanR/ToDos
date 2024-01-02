@@ -142,24 +142,11 @@ public class UserTests
 	
 	private static User createTestUser()
 	{
-		return new User(createTestUserInfo());
+		return UserTestUtils.createSimpleUserWithResetClaims();
 	}
 	
 	private static UserInfo createTestUserInfo()
 	{
-		var userRoleInfo = new UserRoleInfo();
-		
-		userRoleInfo.setId(UUID.randomUUID());
-		userRoleInfo.setName("a");
-		userRoleInfo.setClaims(new UserRoleClaims(0, 0, false, false));
-		
-		var userInfo = new UserInfo();
-		
-		userInfo.setId(UUID.randomUUID());
-		userInfo.setName(new UserName("a", "b", "c"));
-		userInfo.setAddress(Intention.of(new UserAddress("a", "b", "c")));
-		userInfo.setRole(new UserRole(userRoleInfo));
-		
-		return userInfo;
+		return UserTestUtils.createSimpleUserInfoWithResetClaims();
 	}
 }
