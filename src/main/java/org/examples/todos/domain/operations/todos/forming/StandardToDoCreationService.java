@@ -1,6 +1,7 @@
 package org.examples.todos.domain.operations.todos.forming;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.examples.todos.domain.actors.ToDo;
@@ -19,38 +20,35 @@ public class StandardToDoCreationService implements ToDoCreationService {
 	private final ToDoFormer toDoFormer;
 	
 	@Override
-	public ToDo createToDoFor(ToDoInfo toDoInfo, User author) throws DomainException {
+	public ToDo createToDoFor(ToDoInfo toDoInfo, User actor) throws DomainException {
 		
-		ensureToDoCanCreatedForUser(toDoInfo, author);
+		ensureToDoCanCreatedForUser(toDoInfo, actor);
 		
 		var sanitizedToDoInfo = sanitizeToDoInfo(toDoInfo);
 
-		return toDoFormer.formToDo(sanitizedToDoInfo, author);
+		var toDo = toDoFormer.formToDo(sanitizedToDoInfo, actor);
+		
+		if (!Objects.isNull(toDoInfo.getNotes()))
+			toDo.addNotes(toDoInfo.getNotes().getValue());
+		
+		return toDo;
 	}
 
-	private void ensureToDoCanCreatedForUser(ToDoInfo toDoInfo, User author) {
+	private void ensureToDoCanCreatedForUser(ToDoInfo toDoInfo, User actor) {
 		
-		var userToDoList = toDoFinder.findUserTodos(author);
+		var userToDoList = toDoFinder.findUserTodos(actor);
 		
-		ensureCreatedToDoCountLimitNotReached(userToDoList, author);
-		ensureToDoNotCreatedYet(userToDoList, toDoInfo);
+		ensureCreatedToDoCountLimitNotReached(userToDoList, actor);
 	}
 
-	private void ensureCreatedToDoCountLimitNotReached(ToDoList userToDoList, User author) {
+	private void ensureCreatedToDoCountLimitNotReached(ToDoList userToDoList, User actor) {
 		
-		if (author.getAllowedToDoCreationCount() >= userToDoList.count())
+		if (actor.getAllowedToDoCreationCount() <= userToDoList.count())
 		{
-			throw new DomainException("The created To-Do count limit is reached");
+			throw new ToDoCreationCountLimitReachedException(
+				"The created To-Do count limit is reached"
+			);
 		}
-	}
-
-	private void ensureToDoNotCreatedYet(ToDoList userToDoList, ToDoInfo toDoInfo) {
-		
-		if (userToDoList.containsByName(toDoInfo.getName()))
-		{
-			throw new DomainException("To-Do \"" + toDoInfo.getName() + "\" is already created");
-		}
-		
 	}
 	
 	private ToDoInfo sanitizeToDoInfo(ToDoInfo toDoInfo) {
@@ -61,6 +59,7 @@ public class StandardToDoCreationService implements ToDoCreationService {
 		sanitizedToDoInfo.setCreationDate(LocalDateTime.now());
 		sanitizedToDoInfo.setParentToDoId(null);
 		sanitizedToDoInfo.setPerformingDate(null);
+		sanitizedToDoInfo.setNotes(null);
 		
 		return sanitizedToDoInfo;
 	}

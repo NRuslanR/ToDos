@@ -1,8 +1,8 @@
 package org.examples.todos.domain.common.entities;
 
 import java.util.Objects;
+import java.util.Optional;
 
-import org.examples.todos.domain.common.base.DomainObject;
 import org.examples.todos.domain.common.entities.rules.DomainAggregateWorkingRules;
 import org.examples.todos.domain.common.errors.DomainException;
 
@@ -16,46 +16,62 @@ public abstract class DomainAggregateRoot<
 
 > extends DomainEntity<Id, Info, AggregateRoot>
 {
-	private WorkingRules workingRules;
-	private Actor actor;
+	private Optional<WorkingRules> workingRules;
+	private Optional<Actor> actor;
 	private boolean isInEditing;
 	
-	
-	protected DomainAggregateRoot(Info fullInfo, WorkingRules workingRules, Actor actor) {
+	protected DomainAggregateRoot(Info fullInfo)
+	{
 		super(fullInfo);
 		
-		setWorkingRules(workingRules);
-		setActorByWorkingRules(actor, workingRules);
-		
-		ensureValidCreation();
+		workingRules = Optional.empty();
+		actor = Optional.empty();
+	}
+	
+	public Optional<WorkingRules> getWorkingRules()
+	{
+		return workingRules;
+	}
+	
+	protected WorkingRules workingRules()
+	{
+		return workingRules.get();
 	}
 
-	private void setWorkingRules(WorkingRules workingRules) {
+	public void setWorkingRules(WorkingRules workingRules) {
 		
 		if (Objects.isNull(workingRules))
 		{
-			throw new DomainException("Working rules must be assigned to object before it may use");
+			throw new DomainException("Attemp to assign the invalid working rules");
 		}
 		
-		this.workingRules = workingRules;
+		this.workingRules = Optional.of(workingRules);
 	}
 
-	private void setActorByWorkingRules(Actor actor, WorkingRules workingRules) {
+	public Optional<Actor> getActor()
+	{
+		return actor;
+	}
+	
+	protected Actor actor()
+	{
+		return actor.get();
+	}
+	
+	public void setActor(Actor actor) {
+		
+		ensureWorkingRulesAssigned();
 		
 		if (Objects.isNull(actor))
 		{
-			throw new DomainException("Actor must be assigned to object before it may use");
+			throw new DomainException("Attempt to assign the invalid actor");
 		}
 		
-		workingRules.getViewingRule().ensureCanViewedByActor(this, actor);
+		workingRules().getViewingRule().ensureCanViewedByActor(this, actor);
 		
-		this.actor = actor;
+		this.actor = Optional.of(actor);
 	}
 	
-	protected void ensureValidCreation() {
-		
-	}
-
 	@Override
 	protected void setInfo(Info newInfo) {
 		
@@ -66,29 +82,37 @@ public abstract class DomainAggregateRoot<
 	
 	public void ensureActorCanChangeThis()
     {
-    	if (Objects.isNull(actor))
-    		return;
-    	
     	if (isInEditing)
     		return;
     	
-    	workingRules.getChangingRule().ensureCanChangedByActor(this, actor);
+    	if (Objects.isNull(actor))
+    		return;
+    	
+    	if (actor.isEmpty())
+    	{
+    		throw new DomainException("Actor must be assigned before this can be used");
+    	}
+    	
+    	workingRules().getChangingRule().ensureCanChangedByActor(this, actor());
     	
     	isInEditing = true;
     }
 	
 	public void ensureActorCanRemoveThis()
 	{
-		workingRules.getRemovingRule().ensureCanRemovedByActor(this, actor);
+		ensureWorkingRulesAssigned();
+		
+		workingRules().getRemovingRule().ensureCanRemovedByActor(this, actor());
 	}
 	
-	protected WorkingRules workingRules()
+	private void ensureWorkingRulesAssigned()
 	{
-		return workingRules;
-	}
-	
-	protected Actor actor()
-	{
-		return actor;
+		if (Objects.isNull(workingRules))
+			return;
+		
+		if (workingRules.isEmpty())
+		{
+			throw new DomainException("Working rules must be assigned before");
+		}
 	}
 }

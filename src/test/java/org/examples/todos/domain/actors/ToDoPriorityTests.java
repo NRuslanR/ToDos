@@ -40,7 +40,7 @@ public class ToDoPriorityTests
 	@Test
 	public void should_Be_Changed_ToDoPriorityValue_When_AssignableValueNonNegative()
 	{
-		var priority = new ToDoPriority(ToDoPriorityType.Medium, 0);
+		var priority = ToDoPriority.Medium(0);
 		
 		final var newPriorityValue = 10;
 		
@@ -52,7 +52,7 @@ public class ToDoPriorityTests
 	@Test
 	public void should_ThrowException_When_ToDoPriorityValueNegative()
 	{
-		var priority = new ToDoPriority(ToDoPriorityType.Urgent, 13);
+		var priority = ToDoPriority.Urgent(13);
 		
 		assertThrows(DomainException.class, () -> {
 			

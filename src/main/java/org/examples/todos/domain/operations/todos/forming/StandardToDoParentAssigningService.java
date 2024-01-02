@@ -21,11 +21,10 @@ public class StandardToDoParentAssigningService implements ToDoParentAssigningSe
 			throw new DomainException(
 				"Invalid parent-child relationship because " +
 				"To-Do \"" + parentToDo.getName() + "\" " +
-				"is child of To-Do\"" + targetToDo + "\""
+				"is child of To-Do\"" + targetToDo.getName() + "\""
 			);
 		}
 		
 		targetToDo.setParentToDoId(parentToDo.getId());
 	}
-
 }

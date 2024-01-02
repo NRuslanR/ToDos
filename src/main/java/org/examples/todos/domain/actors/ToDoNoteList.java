@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
@@ -53,7 +54,7 @@ public class ToDoNoteList
 
     public ToDoNote getById(UUID id)
     {
-        var note = findNoteByCondition(i -> i.getId().equals(id));
+        var note = findNoteByCondition(i -> Objects.equals(i.getId(), id));
 
         return note.orElseThrow(
             () -> new DomainException(
@@ -64,7 +65,7 @@ public class ToDoNoteList
 
     public ToDoNote getByName(String name)
     {
-        var note = findNoteByCondition(i -> i.getName().equals(name));
+        var note = findNoteByCondition(i -> Objects.equals(i.getName(), name));
 
         return note.orElseThrow(
             () -> new DomainException(

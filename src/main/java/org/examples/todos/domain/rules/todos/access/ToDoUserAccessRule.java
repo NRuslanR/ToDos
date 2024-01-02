@@ -39,7 +39,7 @@ public abstract class ToDoUserAccessRule implements DomainEntityRelationshipRule
 
 	protected boolean hasUserPermissionsForToDoAccess(User user, ToDo toDo) {
 		
-		return !userIdentificationRule.AreUsersSame(user, toDo.getAuthor());
+		return userIdentificationRule.AreUsersSame(user, toDo.getAuthor());
 	}
 
 }

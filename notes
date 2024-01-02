@@ -1,2 +1,5 @@
 1) Introduce EntityId class and EntityIdCreationService
 2) Place right throws Exception class marks in domain classes' api
+3) Actor make optional property and constructor param to simplify domain services and repositories interfaces and implementations
+4) The rule of the allowed to-do note creation count to incapsulate and inject to ToDo and StandardToDoCreationService
+5) Think about ensuring rules after actor assigning for cases like allowed to-do note creation count by user

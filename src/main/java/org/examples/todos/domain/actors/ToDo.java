@@ -1,6 +1,7 @@
 package org.examples.todos.domain.actors;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -10,6 +11,7 @@ import org.examples.todos.domain.common.errors.DomainException;
 import org.examples.todos.domain.resources.users.User;
 import org.examples.todos.domain.rules.todos.ToDoWorkingRules;
 import org.examples.todos.shared.utils.StringUtils;
+import org.hibernate.resource.transaction.backend.jta.internal.synchronization.SynchronizationCallbackCoordinatorNonTrackingImpl;
 
 public class ToDo extends DomainAggregateRoot<
 	UUID, 
@@ -19,9 +21,9 @@ public class ToDo extends DomainAggregateRoot<
 	ToDo
 > 
 {
-	public ToDo(ToDoInfo Info, ToDoWorkingRules workingRules, User actor) 
+	public ToDo(ToDoInfo info) 
 	{
-		super(Info, workingRules, actor);
+		super(info);
 	}
 
 	@Override
@@ -41,35 +43,35 @@ public class ToDo extends DomainAggregateRoot<
     }
 
 	private void setParentToDoId(Intention<UUID> value) 
-	{		
+	{	
+		info.setParentToDoId(Intention.of(null));
+		
 		if (!Objects.isNull(value))
 			setParentToDoId(value.getValue());
-		
-		else info.setParentToDoId(Intention.of(null));
 	}
 
 	private void setDescription(Intention<String> value) 
 	{	
+		info.setDescription(Intention.of(null));
+		
 		if (!Objects.isNull(value))
 			setDescription(value.getValue());
-		
-		else info.setDescription(Intention.of(null));
 	}
 
 	private void setPerformingDate(Intention<LocalDateTime> value) 
-	{	
+	{
+		info.setPerformingDate(Intention.of(null));
+		
 		if (!Objects.isNull(value))
 			setPerformingDate(value.getValue());
-		
-		else info.setPerformingDate(Intention.of(null));
 	}
 
 	private void setNotes(Intention<ToDoNoteList> value) 
 	{	
+		info.setNotes(Intention.of(new ToDoNoteList()));
+		
 		if (!Objects.isNull(value))
     		setNotes(value.getValue());	
-		
-		else info.setNotes(Intention.of(new ToDoNoteList()));
 	}
 
 	public UUID getParentToDoId()
@@ -84,6 +86,11 @@ public class ToDo extends DomainAggregateRoot<
     	if (Objects.isNull(newParentToDoId))
     	{
     		throw new DomainException("Attempt to assign non-existent parent To-Do");
+    	}
+    	
+    	if (getId().equals(newParentToDoId))
+    	{
+    		throw new DomainException("To-Do can't be parent for itself");
     	}
     	
         info.setParentToDoId(Intention.of(newParentToDoId));
@@ -210,6 +217,11 @@ public class ToDo extends DomainAggregateRoot<
         return note.getInfo();
     }
 
+    public void addNotes(Iterable<ToDoNote> notes)
+    {
+    	notes.forEach(this::addNote);
+    }
+    
     public void addNote(ToDoNote note)
     {
     	ensureActorCanAddNote(note);
@@ -330,16 +342,8 @@ public class ToDo extends DomainAggregateRoot<
 			throw new DomainException("Attempt to assign the non-existent To-Do note list");
 		}
 		
-		info.setNotes(Intention.of(newNotes.clone()));
-	}
-    
-    @Override
-	protected void ensureValidCreation() 
-    {
-		super.ensureValidCreation();
+		var clonedNotes = newNotes.clone();
 		
-		workingRules()
-			.getChangingRule()
-				.ensureToDoNoteListValid(info.getNotes().getValue(), actor());
+		info.setNotes(Intention.of(clonedNotes));
 	}
 }

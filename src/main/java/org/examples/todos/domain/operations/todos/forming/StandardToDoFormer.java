@@ -12,18 +12,23 @@ import org.examples.todos.domain.rules.todos.performing.StandardToDoOverlappingP
 import org.examples.todos.domain.rules.todos.performing.StandardToDoUserPerformingRule;
 import org.examples.todos.domain.rules.users.relationships.StandardUserIdentificationRule;
 
-public class StandardToDoFormer implements ToDoFormer {
-
+public class StandardToDoFormer implements ToDoFormer 
+{
 	@Override
-	public ToDo formToDo(ToDoInfo toDoInfo, User author) throws DomainException {
+	public ToDo formToDo(ToDoInfo toDoInfo, User actor) throws DomainException {
 		
 		var workingRules = createToDoWorkingRules();
 		
-		return new ToDo(toDoInfo, workingRules, author);
+		var toDo = new ToDo(toDoInfo);
+		
+		toDo.setWorkingRules(workingRules);
+		toDo.setActor(actor);
+		
+		return toDo;
 	}
 
-	private ToDoWorkingRules createToDoWorkingRules() {
-		
+	private ToDoWorkingRules createToDoWorkingRules() 
+	{	
 		var userIdentificationRule = new StandardUserIdentificationRule();
 		
 		return new ToDoWorkingRules(

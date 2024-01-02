@@ -48,7 +48,7 @@ public abstract class DomainEntity<
 
     public boolean equals(DomainEntity<Key, Info, Entity> other)
     {
-        return super.equals(other);
+        return equals((Object)other);
     }
 
     @Override
@@ -61,8 +61,8 @@ public abstract class DomainEntity<
         final DomainEntity<Key, Info, Entity> otherEntity = 
         	(DomainEntity<Key, Info, Entity>)obj;
 
-        return otherEntity.getId().getClass().equals(otherEntity.getId().getClass()) &&
-            otherEntity.getId().equals(otherEntity.getId());
+        return getId().getClass().equals(otherEntity.getId().getClass()) &&
+            getId().equals(otherEntity.getId());
     }
 
     @Override

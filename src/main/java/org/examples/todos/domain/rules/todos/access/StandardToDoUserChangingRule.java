@@ -20,7 +20,9 @@ public class StandardToDoUserChangingRule extends ToDoUserAccessRule implements 
 		
 		if (user.getAllowedToDoNoteCreationCount() <= toDo.getNotes().count())
     	{
-    		throw new DomainException("The created To-Do note count limit is reached");
+    		throw new ToDoNoteCreationCountLimitReachedException(
+    			"The created To-Do note count limit is reached"
+    		);
     	}			
 	}
 

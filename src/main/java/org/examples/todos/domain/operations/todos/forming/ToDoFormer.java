@@ -7,5 +7,5 @@ import org.examples.todos.domain.resources.users.User;
 
 public interface ToDoFormer {
 
-	ToDo formToDo(ToDoInfo toDoInfo, User author) throws DomainException;
+	ToDo formToDo(ToDoInfo toDoInfo, User actor) throws DomainException;
 }

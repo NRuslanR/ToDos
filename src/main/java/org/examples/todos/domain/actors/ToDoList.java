@@ -3,11 +3,15 @@ package org.examples.todos.domain.actors;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.examples.todos.domain.common.errors.DomainException;
 import org.examples.todos.domain.common.valueobjects.DomainValueObject;
+import org.examples.todos.domain.resources.users.User;
+import org.hibernate.cache.spi.support.AbstractReadWriteAccess.Item;
 
 @SuppressWarnings("unused")
 public class ToDoList extends DomainValueObject<ToDoList> implements Iterable<ToDo>  
@@ -76,7 +80,7 @@ public class ToDoList extends DomainValueObject<ToDoList> implements Iterable<To
 	
 	public Optional<ToDo> findByName(String toDoName)
 	{
-		return toDoList.stream().filter(t -> t.getName().equals(toDoName)).findFirst();
+		return toDoList.stream().filter(t -> Objects.equals(t.getName(), toDoName)).findFirst();
 	}
 	
 	public void remove(ToDo toDo)
@@ -86,10 +90,20 @@ public class ToDoList extends DomainValueObject<ToDoList> implements Iterable<To
 	
 	public ToDoList getAllSubToDosFor(ToDo toDo)
 	{
+		return getToDosByCondition(item -> Objects.equals(item.getParentToDoId(), toDo.getId()));
+	}
+	
+	public ToDoList getAllUserToDos(User user)
+	{
+		return getToDosByCondition(item -> Objects.equals(item.getAuthor(), user));
+	}
+	
+	private ToDoList getToDosByCondition(Predicate<ToDo> condition)
+	{
 		var subToDos =
 			toDoList
 				.stream()
-				.filter(item -> item.getParentToDoId().equals(toDo.getId()))
+				.filter(condition)
 				.toList();
 		
 		return ToDoList.of(subToDos);

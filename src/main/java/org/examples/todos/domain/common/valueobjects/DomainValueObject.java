@@ -12,7 +12,7 @@ public class DomainValueObject<T extends DomainValueObject<T>> extends DomainObj
     
     public boolean equals(T other)
     {
-        return super.equals(other);
+        return equals((Object)other);
     }
 
     @Override
