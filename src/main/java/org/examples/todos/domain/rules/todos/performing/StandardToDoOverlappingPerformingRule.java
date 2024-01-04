@@ -19,7 +19,7 @@ public class StandardToDoOverlappingPerformingRule implements ToDoOverlappingPer
 		
 		if (overlappingToDo.getId() != targetToDo.getParentToDoId())
 		{
-			throw new ToDoOverlappingPerformingRuleException(
+			throw new OverlappingToDoIsNotParentException(
 				"To-Do \"" + overlappingToDo.getName() + "\" isn't parent for To-Do \"" +
 				targetToDo.getName() + "\" for overlapping performing"
 			);
@@ -31,7 +31,7 @@ public class StandardToDoOverlappingPerformingRule implements ToDoOverlappingPer
 		
 		if (!overlappingToDo.isPerformed())
 		{
-			throw new DomainException(
+			throw new OverlappingToDoIsNotPerformedException(
 				"Overlapping To-Do \"" 
 				+ overlappingToDo.getName() + 
 				"\" must be performed before the sub To-Dos' overlappig performing"
@@ -43,7 +43,7 @@ public class StandardToDoOverlappingPerformingRule implements ToDoOverlappingPer
 		
 		if (targetToDo.isPerformed())
 		{
-			throw new ToDoOverlappingPerformingRuleException(
+			throw new ToDoIsAlreadyPerformedException(
 				"To-Do \"" + targetToDo.getName() + "\" is already performed"
 			);
 		}

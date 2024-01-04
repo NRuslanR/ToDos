@@ -70,6 +70,8 @@ public abstract class DomainAggregateRoot<
 		workingRules().getViewingRule().ensureCanViewedByActor(this, actor);
 		
 		this.actor = Optional.of(actor);
+		
+		isInEditing = false;
 	}
 	
 	@Override
@@ -90,7 +92,9 @@ public abstract class DomainAggregateRoot<
     	
     	if (actor.isEmpty())
     	{
-    		throw new DomainException("Actor must be assigned before this can be used");
+    		throw new DomainAggregateRootActorNotAssignedException(
+    			"Actor must be assigned before this can be used"
+    		);
     	}
     	
     	workingRules().getChangingRule().ensureCanChangedByActor(this, actor());
@@ -112,7 +116,7 @@ public abstract class DomainAggregateRoot<
 		
 		if (workingRules.isEmpty())
 		{
-			throw new DomainException("Working rules must be assigned before");
+			throw new DomainAggregateWorkingRulesNotAssignedException("Working rules must be assigned before");
 		}
 	}
 }

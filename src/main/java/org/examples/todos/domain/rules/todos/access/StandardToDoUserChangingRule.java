@@ -14,7 +14,7 @@ public class StandardToDoUserChangingRule extends ToDoUserAccessRule implements 
 	}
 
 	@Override
-	public void ensureUserCanAssignNewToDoNote(User user, ToDo toDo) throws DomainEntityRelationshipRuleException {
+	public void ensureUserCanAssignNewToDoNote(User user, ToDo toDo) throws ToDoUserChangingRuleException {
 		
 		ensureToDoCanBeChangedByUser(toDo, user);
 		
@@ -38,17 +38,17 @@ public class StandardToDoUserChangingRule extends ToDoUserAccessRule implements 
 		
 		if (toDo.isPerformed())
 		{
-			throw new DomainEntityRelationshipRuleException(
+			throw new ToDoUserChangingRuleException(
 				"To-Do \"" + toDo.getName() + "\" is already performed"
 			);
 		}
 	}
 	
-	public void ensureToDoNoteListValid(ToDoNoteList toDoNoteList, User user) throws DomainEntityRelationshipRuleException
+	public void ensureToDoNoteListValid(ToDoNoteList toDoNoteList, User user) throws ToDoUserChangingRuleException
 	{
 		if (user.getAllowedToDoNoteCreationCount() < toDoNoteList.count())
     	{
-    		throw new DomainException("The created To-Do note count limit is exceeded");
+    		throw new ToDoUserChangingRuleException("The created To-Do note count limit is exceeded");
     	}			
 	}
 	

@@ -26,7 +26,7 @@ public class StandardToDoUserPerformingRule implements ToDoUserPerformingRule {
 		
 		if (!userIdentificationRule.AreUsersSame(user, toDo.getAuthor()))
 		{
-			throw new DomainEntityRelationshipRuleException(
+			throw new ToDoActorHasNotPerformingRightsException(
 				"User \"" + user.getFullName() + 
 				"\" isn't To-Do \"" + toDo.getName() + "\"'s author \"" + 
 				toDo.getAuthor().getFullName() + "\""
@@ -38,7 +38,7 @@ public class StandardToDoUserPerformingRule implements ToDoUserPerformingRule {
 		
 		if (toDo.isPerformed())
 		{
-			throw new DomainEntityRelationshipRuleException(
+			throw new ToDoIsAlreadyPerformedException(
 				"To-Do \"" + toDo.getName() + "\" is already performed"
 			);
 		}

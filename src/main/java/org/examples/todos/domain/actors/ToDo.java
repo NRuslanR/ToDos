@@ -1,17 +1,15 @@
 package org.examples.todos.domain.actors;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.Objects;
 import java.util.UUID;
-
+ 
 import org.examples.todos.domain.common.base.Intention;
 import org.examples.todos.domain.common.entities.DomainAggregateRoot;
 import org.examples.todos.domain.common.errors.DomainException;
 import org.examples.todos.domain.resources.users.User;
 import org.examples.todos.domain.rules.todos.ToDoWorkingRules;
 import org.examples.todos.shared.utils.StringUtils;
-import org.hibernate.resource.transaction.backend.jta.internal.synchronization.SynchronizationCallbackCoordinatorNonTrackingImpl;
 
 public class ToDo extends DomainAggregateRoot<
 	UUID, 
@@ -85,12 +83,12 @@ public class ToDo extends DomainAggregateRoot<
     	
     	if (Objects.isNull(newParentToDoId))
     	{
-    		throw new DomainException("Attempt to assign non-existent parent To-Do");
+    		throw new ToDoParentIsNullException("Attempt to assign non-existent parent To-Do");
     	}
     	
     	if (getId().equals(newParentToDoId))
     	{
-    		throw new DomainException("To-Do can't be parent for itself");
+    		throw new ToDoParentItSelfException("To-Do can't be parent for itself");
     	}
     	
         info.setParentToDoId(Intention.of(newParentToDoId));
@@ -114,7 +112,7 @@ public class ToDo extends DomainAggregateRoot<
     	
         if (!isNameCorrect(name))
         {
-            throw new DomainException("To-Do name must contain text");
+            throw new ToDoNameIncorrectException("To-Do name must contain text");
         }
         
         info.setName(name);

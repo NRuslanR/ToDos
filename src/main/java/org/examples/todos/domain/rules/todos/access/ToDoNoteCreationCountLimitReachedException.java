@@ -2,7 +2,7 @@ package org.examples.todos.domain.rules.todos.access;
 
 import org.examples.todos.domain.common.entities.rules.DomainEntityRelationshipRuleException;
 
-public class ToDoNoteCreationCountLimitReachedException extends DomainEntityRelationshipRuleException
+public class ToDoNoteCreationCountLimitReachedException extends ToDoUserChangingRuleException
 {
 
 	protected ToDoNoteCreationCountLimitReachedException(String message, Throwable t) {

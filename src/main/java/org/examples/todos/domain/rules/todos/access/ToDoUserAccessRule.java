@@ -26,7 +26,7 @@ public abstract class ToDoUserAccessRule implements DomainEntityRelationshipRule
 		
 		if (!hasUserPermissionsForToDoAccess(user, toDo))
 		{
-			throw new DomainEntityRelationshipRuleException(
+			throw new ToDoUserAccessRuleException(
 				String.format(
 					"User \"%s\" can't access rights for To-Do \"%s\" because he isn't same it author",
 					user.getFullName(), 

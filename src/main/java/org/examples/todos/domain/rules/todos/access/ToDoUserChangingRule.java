@@ -33,6 +33,6 @@ public interface ToDoUserChangingRule extends DomainAggregateChangingRule<ToDo, 
 		}
 	}
 	
-	void ensureUserCanAssignNewToDoNote(User user, ToDo toDo) throws DomainEntityRelationshipRuleException;
-	void ensureToDoNoteListValid(ToDoNoteList toDoNoteList, User user) throws DomainEntityRelationshipRuleException;
+	void ensureUserCanAssignNewToDoNote(User user, ToDo toDo) throws ToDoUserChangingRuleException;
+	void ensureToDoNoteListValid(ToDoNoteList toDoNoteList, User user) throws ToDoUserChangingRuleException;
 }
