@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -25,6 +26,7 @@ import org.examples.todos.domain.rules.todos.performing.OverlappingToDoIsNotPare
 import org.examples.todos.domain.rules.todos.performing.OverlappingToDoIsNotPerformedException;
 import org.examples.todos.domain.rules.todos.performing.ToDoActorHasNotPerformingRightsException;
 import org.examples.todos.domain.rules.todos.performing.ToDoIsAlreadyPerformedException;
+import org.ietf.jgss.Oid;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -366,6 +368,88 @@ public class ToDoTests
 		assertThrows(ToDoUserAccessRuleException.class, () -> {
 			
 			testToDo.removeNote(UUID.randomUUID());
+			
+		});
+	}
+	
+	@Test
+	public void should_PutNoteInToDo_When_NoteIsValid()
+	{
+		var note = createTestToDoNote();
+		
+		testToDo.addNote(note);
+		
+		assertEquals(note.getInfo(), testToDo.getNoteInfo(note.getId()));
+	}
+	
+	@ParameterizedTest
+	@NullSource
+	@MethodSource("invalidToDoNotes")
+	public void should_ThrowException_When_TryingPutNoteInToDo_And_NoteIsInvalid(ToDoNote note)
+	{
+		if (!Objects.isNull(note))
+			testToDo.addNote(note);
+		
+		assertThrows(DomainException.class, () -> {
+			
+			testToDo.addNote(note);
+			
+		});
+	}
+	
+	private static Stream<Arguments> invalidToDoNotes()
+	{
+		return Stream.of(Arguments.of(createTestToDoNote()));
+	}
+	
+	private static ToDoNote createTestToDoNote()
+	{
+		return ToDoNoteTestUtils.createSimpleToDoNote("note", "text");
+	}
+	
+	@Test
+	public void should_ChangeToDoNote_When_NoteInfoIsValid()
+	{
+		var note = createTestToDoNote();
+		
+		testToDo.addNote(note);
+		
+		var noteInfo = testToDo.getNoteInfo(note.getId());
+		
+		noteInfo.setName("Another note name");
+		noteInfo.setText("text");
+		
+		testToDo.changeNote(noteInfo);
+		
+		assertEquals(noteInfo, testToDo.getNoteInfo(noteInfo.getId()));
+	}
+	
+	@Test
+	public void should_ThrowException_When_TryingChangeToDoNote_And_InfoIsInvalid()
+	{
+		var note = createTestToDoNote();
+		
+		testToDo.addNote(note);
+		
+		assertThrows(DomainException.class, () -> {
+			
+			testToDo.changeNote(note.getInfo());
+			
+		});
+	}
+	
+	@Test
+	public void should_RemoveToDoNote_When_NoteExists()
+	{
+		var note = createTestToDoNote();
+		
+		testToDo.addNote(note);
+		
+		testToDo.removeNote(note.getId());
+		
+		assertThrows(DomainException.class, () -> {
+			
+			testToDo.getNoteInfo(note.getId());	
 			
 		});
 	}

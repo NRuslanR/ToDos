@@ -60,6 +60,8 @@ public class ToDoList extends DomainValueObject<ToDoList> implements Iterable<To
 	
 	public void add(ToDo toDo)
 	{
+		Objects.requireNonNull(toDo);
+		
 		if (contains(toDo))
 		{
 			throw new DomainException("To-Do \"" + toDo.getName() + "\" is already in list");

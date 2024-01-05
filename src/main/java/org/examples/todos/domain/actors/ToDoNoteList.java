@@ -54,7 +54,7 @@ public class ToDoNoteList
 
     public ToDoNote getById(UUID id)
     {
-        var note = findNoteByCondition(i -> Objects.equals(i.getId(), id));
+        var note = findById(id);
 
         return note.orElseThrow(
             () -> new DomainException(
@@ -62,16 +62,26 @@ public class ToDoNoteList
             )
         );
     }
+    
+    public Optional<ToDoNote> findById(UUID id)
+    {
+    	return findNoteByCondition(i -> Objects.equals(i.getId(), id));
+    }
 
     public ToDoNote getByName(String name)
     {
-        var note = findNoteByCondition(i -> Objects.equals(i.getName(), name));
+        var note = findByName(name);
 
         return note.orElseThrow(
             () -> new DomainException(
                 "To-Do note with name \"" + name + "\" not found"
             )
         );
+    }
+    
+    public Optional<ToDoNote> findByName(String name)
+    {
+    	return findNoteByCondition(i -> Objects.equals(i.getName(), name));
     }
 
     private Optional<ToDoNote> findNoteByCondition(Predicate<ToDoNote> condition)
@@ -86,12 +96,31 @@ public class ToDoNoteList
 
     public void add(ToDoNote toDoNote)
     {
+    	Objects.requireNonNull(toDoNote);
+    	
         if (contains(toDoNote))
         {
             throw new DomainException("Attempt to attach the same note for to-do");
         }
 
         toDoNoteList.add(toDoNote);
+    }
+    
+    public void change(ToDoNoteInfo noteInfo)
+    {
+    	Objects.requireNonNull(noteInfo);
+    	
+    	if (findByName(noteInfo.getName()).isPresent())
+    	{
+    		throw new DomainException(
+    			"Attempt to change note's name while "
+    			+ "another note with same name is already attached"
+    		);
+    	}
+    	
+    	var note = getById(noteInfo.getId());
+    	
+    	note.setInfo(noteInfo);
     }
 
     public void remove(ToDoNote toDoNote)

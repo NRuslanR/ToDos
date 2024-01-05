@@ -48,10 +48,7 @@ public class ToDoNoteListTests
 	{
 		var toDoNoteList = createTestToDoNoteList();
 		
-		var toDoNoteForAdd =
-			new ToDoNote(
-				new ToDoNoteInfo(UUID.randomUUID(), "Note#4", "some text", LocalDateTime.now())
-			);
+		var toDoNoteForAdd = ToDoNoteTestUtils.createSimpleToDoNote("Note#4", "text");
 		
 		toDoNoteList.add(toDoNoteForAdd);
 		
@@ -67,11 +64,7 @@ public class ToDoNoteListTests
 			DomainException.class, 
 			() -> {
 				
-				toDoNoteList.add(
-					new ToDoNote(
-						new ToDoNoteInfo(UUID.randomUUID(), "Note#3", "text", LocalDateTime.now())
-					)
-				);
+				toDoNoteList.add(ToDoNoteTestUtils.createSimpleToDoNote("Note#3", "text"));
 			}
 		);
 	}
@@ -81,8 +74,8 @@ public class ToDoNoteListTests
 	{
 		var toDoNotesForAdd = 
 			Arrays.asList(
-				new ToDoNote(new ToDoNoteInfo(UUID.randomUUID(), "Note#4", "text", LocalDateTime.now())),
-				new ToDoNote(new ToDoNoteInfo(UUID.randomUUID(), "Note#5", "text", LocalDateTime.now()))
+				ToDoNoteTestUtils.createSimpleToDoNote("Note#4", "text"),
+				ToDoNoteTestUtils.createSimpleToDoNote("Note#5", "text")
 			);
 		
 		toDoNoteList.addAll(toDoNotesForAdd);
@@ -101,8 +94,8 @@ public class ToDoNoteListTests
 	{
 		var toDoNotesForAdd = 
 			Arrays.asList(
-				new ToDoNote(new ToDoNoteInfo(UUID.randomUUID(), "Note#4", "text", LocalDateTime.now())),
-				new ToDoNote(new ToDoNoteInfo(UUID.randomUUID(), "Note#3", "text", LocalDateTime.now()))
+				ToDoNoteTestUtils.createSimpleToDoNote("Note#4", "text"),
+				ToDoNoteTestUtils.createSimpleToDoNote("Note#3", "text")
 			);
 		
 		assertThrows(
@@ -193,29 +186,9 @@ public class ToDoNoteListTests
 	{
 		var toDoNoteList = new ArrayList<ToDoNote>();
 		
-		toDoNoteList.add(
-			new ToDoNote(
-				new ToDoNoteInfo(
-					UUID.randomUUID(), "Note#1", "some text", LocalDateTime.now()
-				)
-			)
-		);
-		
-		toDoNoteList.add(
-			new ToDoNote(
-				new ToDoNoteInfo(
-					UUID.randomUUID(), "Note#2", "some text", LocalDateTime.now()
-				)
-			)
-		);
-		
-		toDoNoteList.add(
-			new ToDoNote(
-				new ToDoNoteInfo(
-					UUID.randomUUID(), "Note#3", "some text", LocalDateTime.now()
-				)
-			)
-		);
+		toDoNoteList.add(ToDoNoteTestUtils.createSimpleToDoNote("Note#1", "text"));
+		toDoNoteList.add(ToDoNoteTestUtils.createSimpleToDoNote("Note#2", "text"));
+		toDoNoteList.add(ToDoNoteTestUtils.createSimpleToDoNote("Note#3", "text"));
 		
 		return toDoNoteList;
 	}

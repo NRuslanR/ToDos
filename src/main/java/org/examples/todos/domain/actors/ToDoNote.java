@@ -77,6 +77,9 @@ public class ToDoNote extends DomainEntity<UUID, ToDoNoteInfo, ToDoNote>
     		throw new DomainException("To-Do note's creation date must be assigned");
     	}
     	
+    	if (Objects.equals(getCreatedAt(), createdAt))
+    		return;
+    	
         if (!Objects.isNull(info.getCreatedAt()))
         {
             throw new DomainException("To-Do note's creation date can't be changed");
@@ -88,6 +91,6 @@ public class ToDoNote extends DomainEntity<UUID, ToDoNoteInfo, ToDoNote>
     @Override
     public boolean equals(Object other)
     {
-        return super.equals(other) && getName().equals(((ToDoNote)other).getName());
+        return super.equals(other) || getName().equals(((ToDoNote)other).getName());
     }
 }

@@ -10,6 +10,7 @@ import org.examples.todos.domain.common.errors.DomainException;
 import org.examples.todos.domain.resources.users.User;
 import org.examples.todos.domain.rules.todos.ToDoWorkingRules;
 import org.examples.todos.shared.utils.StringUtils;
+import org.springframework.data.jpa.domain.AbstractAuditable_;
 
 public class ToDo extends DomainAggregateRoot<
 	UUID, 
@@ -177,11 +178,19 @@ public class ToDo extends DomainAggregateRoot<
 
     private void setCreationDate(LocalDateTime creationDate)
     {
+    	if (Objects.isNull(creationDate))
+    	{
+    		throw new DomainException("To-Do \"" + getName() + "\"'s creation date can't be null");
+    	}
+    	
+    	if (Objects.equals(getCreationDate(), creationDate))
+    		return;
+    	
     	if (!Objects.isNull(getCreationDate()))
     	{
     		throw new DomainException(
     			"To-Do \"" + getName() + 
-    			"\"'s creation date is already performed"
+    			"\"'s creation date is already assigned"
     		);
     	}
     	
@@ -222,6 +231,11 @@ public class ToDo extends DomainAggregateRoot<
     
     public void addNote(ToDoNote note)
     {
+    	if (Objects.isNull(note))
+    	{
+    		throw new DomainException("Attempt to add non-existing To-Do note");
+    	}
+    	
     	ensureActorCanAddNote(note);
     	
         notes().add(note.clone());    
@@ -236,11 +250,14 @@ public class ToDo extends DomainAggregateRoot<
 
 	public void changeNote(ToDoNoteInfo noteInfo)
     {
+		if (Objects.isNull(noteInfo))
+		{
+			throw new DomainException("Attempt to change To-Do note by non-existing info");
+		}
+		
     	ensureActorCanChangeThis();
     	
-        ToDoNote note = notes().getById(noteInfo.getId());
-
-        note.setInfo(noteInfo);
+        notes().change(noteInfo);
     }
 
     public void removeNote(UUID noteId)
