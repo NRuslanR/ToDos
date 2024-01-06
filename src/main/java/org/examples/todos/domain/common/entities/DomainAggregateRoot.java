@@ -90,12 +90,7 @@ public abstract class DomainAggregateRoot<
     	if (Objects.isNull(actor))
     		return;
     	
-    	if (actor.isEmpty())
-    	{
-    		throw new DomainAggregateRootActorNotAssignedException(
-    			"Actor must be assigned before this can be used"
-    		);
-    	}
+    	ensureActorAssigned();
     	
     	workingRules().getChangingRule().ensureCanChangedByActor(this, actor());
     	
@@ -109,7 +104,17 @@ public abstract class DomainAggregateRoot<
 		workingRules().getRemovingRule().ensureCanRemovedByActor(this, actor());
 	}
 	
-	private void ensureWorkingRulesAssigned()
+	protected void ensureActorAssigned() 
+	{
+		if (actor.isEmpty())
+		{
+			throw new DomainAggregateRootActorNotAssignedException(
+				"Actor must be assigned before this can be used"
+			);
+		}
+	}
+	
+	protected void ensureWorkingRulesAssigned()
 	{
 		if (Objects.isNull(workingRules))
 			return;

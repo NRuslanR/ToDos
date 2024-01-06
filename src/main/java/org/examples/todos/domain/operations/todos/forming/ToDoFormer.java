@@ -5,7 +5,8 @@ import org.examples.todos.domain.actors.ToDoInfo;
 import org.examples.todos.domain.common.errors.DomainException;
 import org.examples.todos.domain.resources.users.User;
 
-public interface ToDoFormer {
-
+public interface ToDoFormer 
+{
+	ToDo formToDo(ToDoInfo toDoInfo) throws DomainException;
 	ToDo formToDo(ToDoInfo toDoInfo, User actor) throws DomainException;
 }

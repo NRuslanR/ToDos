@@ -15,13 +15,10 @@ import org.examples.todos.domain.rules.users.relationships.StandardUserIdentific
 public class StandardToDoFormer implements ToDoFormer 
 {
 	@Override
-	public ToDo formToDo(ToDoInfo toDoInfo, User actor) throws DomainException {
+	public ToDo formToDo(ToDoInfo toDoInfo, User actor) throws DomainException 
+	{
+		var toDo = formToDo(toDoInfo);
 		
-		var workingRules = createToDoWorkingRules();
-		
-		var toDo = new ToDo(toDoInfo);
-		
-		toDo.setWorkingRules(workingRules);
 		toDo.setActor(actor);
 		
 		return toDo;
@@ -29,16 +26,20 @@ public class StandardToDoFormer implements ToDoFormer
 
 	private ToDoWorkingRules createToDoWorkingRules() 
 	{	
-		var userIdentificationRule = new StandardUserIdentificationRule();
-		
-		return new ToDoWorkingRules(
-			new StandardToDoUserViewingRule(userIdentificationRule),
-			new StandardToDoUserChangingRule(userIdentificationRule),
-			new StandardToDoUserRemovingRule(userIdentificationRule),
-			new StandardToDoUserPerformingRule(userIdentificationRule),
-			new StandardToDoOverlappingPerformingRule()
-		);
+		return ToDoWorkingRules.standard();
 				
+	}
+
+	@Override
+	public ToDo formToDo(ToDoInfo toDoInfo) throws DomainException 
+	{
+		var workingRules = createToDoWorkingRules();
+		
+		var toDo = new ToDo(toDoInfo);
+		
+		toDo.setWorkingRules(workingRules);
+		
+		return toDo;
 	}
 
 }

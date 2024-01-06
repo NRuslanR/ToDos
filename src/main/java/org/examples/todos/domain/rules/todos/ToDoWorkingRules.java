@@ -2,9 +2,6 @@ package org.examples.todos.domain.rules.todos;
 
 import org.examples.todos.domain.actors.ToDo;
 import org.examples.todos.domain.common.entities.rules.DomainAggregateWorkingRules;
-import org.examples.todos.domain.common.entities.rules.access.DomainAggregateChangingRule;
-import org.examples.todos.domain.common.entities.rules.access.DomainAggregateRemovingRule;
-import org.examples.todos.domain.common.entities.rules.access.DomainAggregateViewingRule;
 import org.examples.todos.domain.resources.users.User;
 import org.examples.todos.domain.rules.todos.access.ToDoUserChangingRule;
 import org.examples.todos.domain.rules.todos.access.ToDoUserRemovingRule;
@@ -13,11 +10,12 @@ import org.examples.todos.domain.rules.todos.performing.ToDoOverlappingPerformin
 import org.examples.todos.domain.rules.todos.performing.ToDoUserPerformingRule;
 
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 @Data
 public class ToDoWorkingRules extends DomainAggregateWorkingRules<ToDo, User> {
 
+	private static final ToDoWorkingRules standardWorkingRules = new StandardToDoWorkingRules();
+	
 	public ToDoWorkingRules(
 			ToDoUserViewingRule viewingRule, 
 			ToDoUserChangingRule changingRule,
@@ -45,6 +43,11 @@ public class ToDoWorkingRules extends DomainAggregateWorkingRules<ToDo, User> {
 	public ToDoUserRemovingRule getRemovingRule()
 	{
 		return (ToDoUserRemovingRule) super.getRemovingRule();
+	}
+	
+	public static ToDoWorkingRules standard()
+	{
+		return standardWorkingRules;
 	}
 	
 	private final ToDoUserPerformingRule performingRule;

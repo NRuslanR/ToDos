@@ -243,6 +243,8 @@ public class ToDo extends DomainAggregateRoot<
 
     private void ensureActorCanAddNote(ToDoNote note) 
     {	
+    	ensureActorAssigned();
+    	
     	workingRules()
     		.getChangingRule()
     			.ensureUserCanAssignNewToDoNote(actor(), this);
@@ -281,6 +283,8 @@ public class ToDo extends DomainAggregateRoot<
 
     private void ensureActorCanPerformThis() 
     {
+    	ensureActorAssigned();
+    	
     	workingRules().getPerformingRule().ensureToDoCanPerformedByUser(this, actor());
 	}
     
@@ -300,7 +304,7 @@ public class ToDo extends DomainAggregateRoot<
     {	
 		workingRules()
 			.getOverlappingPerformingRule()
-				.ensureToDoPerformingCanBeOverlappedByOther(this, overlappingToDo, actor());
+				.ensureToDoPerformingCanBeOverlappedByOther(this, overlappingToDo);
 	}
 
 	private void setPerformingDate(LocalDateTime performingDate) throws DomainException

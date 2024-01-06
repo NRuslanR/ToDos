@@ -5,14 +5,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.examples.todos.domain.common.errors.DomainException;
 import org.examples.todos.domain.common.valueobjects.DomainValueObject;
 import org.examples.todos.domain.resources.users.User;
-import org.hibernate.cache.spi.support.AbstractReadWriteAccess.Item;
 
+/**
+ * Refactor: create base class for domain entity list 
+ * and make ToDoList and ToDoNoteList inheritable from it 
+ */
 @SuppressWarnings("unused")
 public class ToDoList extends DomainValueObject<ToDoList> implements Iterable<ToDo>  
 {
@@ -58,6 +62,28 @@ public class ToDoList extends DomainValueObject<ToDoList> implements Iterable<To
 		toDos.forEach(this::add);
 	}
 	
+	public ToDo getById(UUID id)
+	{
+		var toDo = findById(id);
+		
+		return toDo.orElseThrow(() -> 
+			new DomainException("To-Do wasn't found by id in the list")
+		);
+	}
+	
+	public ToDo getByName(String name)
+	{
+		var toDo = findByName(name);
+		
+		return toDo.orElseThrow(() ->
+			new DomainException("To-Do with name \"" + name + "\" wasn't found in the list")
+		);
+	}
+	private Optional<ToDo> findById(UUID id) 
+	{
+		return toDoList.stream().filter(item -> item.getId().equals(id)).findFirst();
+	}
+
 	public void add(ToDo toDo)
 	{
 		Objects.requireNonNull(toDo);

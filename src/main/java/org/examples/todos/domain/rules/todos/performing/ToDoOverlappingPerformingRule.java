@@ -13,7 +13,7 @@ public interface ToDoOverlappingPerformingRule extends DomainEntityRelationshipR
 	}
 	
 	default void ensureToDoPerformingCanBeOverlappedByOther(
-		ToDo targetToDo, ToDo overlappingToDo, User initiator
+		ToDo targetToDo, ToDo overlappingToDo
 		
 	) throws ToDoOverlappingPerformingRuleException
 	{
