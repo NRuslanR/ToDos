@@ -1,5 +1,7 @@
 package org.examples.todos.infrastructure.persistence.common.repositories;
 
+import java.util.Optional;
+
 import org.examples.todos.domain.common.entities.DomainEntity;
 
 public interface DomainEntityRepository<
@@ -8,7 +10,7 @@ public interface DomainEntityRepository<
 > 
 {
 	Iterable<Entity> findAll();
-	Entity findById(Identity id);
+	Optional<Entity> findById(Identity id);
 	void save(Entity entity);
 	void saveAll(Iterable<Entity> entities);
 	void remove(Entity entity);

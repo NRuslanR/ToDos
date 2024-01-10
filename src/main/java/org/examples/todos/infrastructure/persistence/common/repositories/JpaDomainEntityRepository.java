@@ -1,5 +1,8 @@
 package org.examples.todos.infrastructure.persistence.common.repositories;
 
+import java.util.Collection;
+import java.util.Optional;
+
 import org.apache.commons.collections4.IterableUtils;
 import org.examples.todos.domain.common.entities.DomainEntity;
 import org.examples.todos.domain.common.entities.DomainEntityInfo;
@@ -31,24 +34,27 @@ public abstract class JpaDomainEntityRepository<
 	@Override
 	public Iterable<Entity> findAll() 
 	{
-		Iterable<JpaEntity> jpaEntities = doFindAll();
+		Collection<JpaEntity> jpaEntities = doFindAll();
 		
 		return toDomainEntities(jpaEntities);
 	}
 
-	protected abstract Iterable<JpaEntity> doFindAll();
+	protected abstract Collection<JpaEntity> doFindAll();
 
 	@Override
-	public Entity findById(Identity id) 
+	public Optional<Entity> findById(Identity id) 
 	{
-		JpaEntity jpaEntity = doFindById(id);
+		var jpaEntity = doFindById(id);
 		
-		var entityInfo = entityInfoConverter.convert(jpaEntity);
+		if (jpaEntity.isEmpty())
+			return Optional.empty();
 		
-		return entityFormer.formEntity(entityInfo);
+		var entityInfo = entityInfoConverter.convert(jpaEntity.get());
+		
+		return Optional.of(entityFormer.formEntity(entityInfo));
 	}
 
-	protected abstract JpaEntity doFindById(Identity id);
+	protected abstract Optional<JpaEntity> doFindById(Identity id);
 
 	@Override
 	public void save(Entity entity) 
@@ -82,7 +88,7 @@ public abstract class JpaDomainEntityRepository<
 		doRemove(jpaEntity);
 	}
 
-	protected abstract void doRemove(Object jpaEntity);
+	protected abstract void doRemove(JpaEntity jpaEntity);
 
 	@Override
 	public void removeAll(Iterable<Entity> entities) 
@@ -94,11 +100,10 @@ public abstract class JpaDomainEntityRepository<
 	
 	protected abstract void doRemoveAll(Iterable<JpaEntity> jpaEntities);
 
-	protected Iterable<Entity> toDomainEntities(Iterable<JpaEntity> jpaEntities)
+	protected Iterable<Entity> toDomainEntities(Collection<JpaEntity> jpaEntities)
 	{
 		return 
-			IterableUtils
-				.toList(jpaEntities)
+			jpaEntities
 				.stream()
 				.map(entityInfoConverter::convert)
 				.map(entityFormer::formEntity)
