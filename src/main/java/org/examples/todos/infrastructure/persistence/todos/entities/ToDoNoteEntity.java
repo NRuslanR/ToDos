@@ -26,6 +26,5 @@ public class ToDoNoteEntity extends BaseEntity<UUID>
 
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
-    @CreatedDate
     private LocalDateTime createdAt;
 }

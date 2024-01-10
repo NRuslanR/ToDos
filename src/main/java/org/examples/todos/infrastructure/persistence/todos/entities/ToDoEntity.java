@@ -34,7 +34,6 @@ public class ToDoEntity extends BaseEntity<UUID>
 	
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
-	@CreatedDate
 	private LocalDateTime creationDate;
 
     @Column(name = "performed_at")
@@ -45,7 +44,7 @@ public class ToDoEntity extends BaseEntity<UUID>
 	@JoinColumn(name = "author_id")
 	private UserEntity author;
 
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "note_id")
+	@OneToMany(orphanRemoval = true)
+	@JoinColumn(name = "todo_id")
 	private List<ToDoNoteEntity> notes;  
 }
