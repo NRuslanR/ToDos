@@ -29,5 +29,6 @@ public class ToDosApiAppInitializer implements WebApplicationInitializer
 		
 		registeredServlet.addMapping("/main/*");
 		registeredServlet.setLoadOnStartup(1);
+		registeredServlet.setInitParameter("spring.profiles.active", "dev");
 	}
 }

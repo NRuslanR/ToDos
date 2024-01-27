@@ -26,7 +26,11 @@ public class ToDoEntity extends BaseEntity<UUID>
 {
     private UUID parentToDoId;
 
-	private int priority;
+    @Column(name = "priority_type")
+    private String priorityType;
+    
+    @Column(name = "priority_value")
+	private float priorityValue;
 
 	private String name; 
 

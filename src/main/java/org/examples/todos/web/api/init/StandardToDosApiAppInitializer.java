@@ -4,6 +4,9 @@ import org.examples.todos.web.api.config.ToDosApiConfig;
 import org.examples.todos.web.config.ToDosMvcConfig;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+
 public class StandardToDosApiAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 	
 	@Override
@@ -24,4 +27,11 @@ public class StandardToDosApiAppInitializer extends AbstractAnnotationConfigDisp
 		return new String[] { "/*" };
 	}
 
+	@Override
+	public void onStartup(ServletContext servletContext) throws ServletException {
+		
+		super.onStartup(servletContext);
+		
+		servletContext.setInitParameter("spring.profiles.active", "dev");
+	}
 }

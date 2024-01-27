@@ -22,6 +22,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "todo_notes")
 public class ToDoNoteEntity extends BaseEntity<UUID> 
 {
+	private String name;
+	
     private String note;
 
     @Column(name = "created_at")

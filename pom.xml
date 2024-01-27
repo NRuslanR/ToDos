@@ -161,6 +161,19 @@
 	    <artifactId>javatuples</artifactId>
 	    <version>1.2</version>
 	</dependency>
+	
+	<dependency>
+	    <groupId>org.modelmapper</groupId>
+	    <artifactId>modelmapper</artifactId>
+	    <version>3.2.0</version>
+	</dependency>
+	
+	<dependency>
+	    <groupId>com.h2database</groupId>
+	    <artifactId>h2</artifactId>
+	    <version>2.2.224</version>
+	    <scope>runtime</scope>
+	</dependency>
 
   </dependencies>
 
@@ -211,7 +224,7 @@
           <artifactId>jetty-maven-plugin</artifactId>
           <version>11.0.13</version>
           <configuration>
-            <scanIntervalSeconds>2</scanIntervalSeconds>
+            <scan>1</scan>
             <httpConnector>
 				<port>8082</port>
 			</httpConnector>

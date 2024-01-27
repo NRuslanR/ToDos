@@ -9,7 +9,9 @@ import org.examples.todos.infrastructure.persistence.roles.entities.RoleEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 import lombok.Data;
@@ -25,6 +27,10 @@ public class UserEntity extends BaseEntity<UUID>
 
     private String patronymic;
 
+    @OneToOne
+    @MapsId
+    private UserAddressEntity address;
+    
     @OneToMany
     @JoinTable(
         name = "users_roles",

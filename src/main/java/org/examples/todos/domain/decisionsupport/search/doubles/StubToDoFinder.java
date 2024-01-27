@@ -5,10 +5,11 @@ import java.util.ArrayDeque;
 import org.apache.commons.collections4.IterableUtils;
 import org.examples.todos.domain.actors.ToDo;
 import org.examples.todos.domain.actors.ToDoList;
-import org.examples.todos.domain.decisionsupport.search.ToDoFinder;
+import org.examples.todos.domain.common.errors.DomainException;
+import org.examples.todos.domain.decisionsupport.search.BaseToDoFinder;
 import org.examples.todos.domain.resources.users.User;
 
-public class StubToDoFinder implements ToDoFinder
+public class StubToDoFinder extends BaseToDoFinder
 {
 	private ToDoList toDoList;
 	
@@ -18,7 +19,7 @@ public class StubToDoFinder implements ToDoFinder
 	}
 	
 	@Override
-	public ToDoList findAllSubToDosRecursivelyFor(ToDo targetToDo) throws NullPointerException 
+	public ToDoList doFindAllSubToDosRecursivelyFor(ToDo targetToDo) throws DomainException
 	{
 		var foundToDoList = new ToDoList();
 		
@@ -43,8 +44,8 @@ public class StubToDoFinder implements ToDoFinder
 	}
 
 	@Override
-	public ToDoList findUserTodos(User author) throws NullPointerException {
-
+	public ToDoList doFindUserTodos(User author) throws DomainException 
+	{
 		return toDoList.getAllUserToDos(author);
 	}
 	
