@@ -1,7 +1,9 @@
 package org.examples.todos.infrastructure.persistence.config;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -12,6 +14,7 @@ import org.examples.todos.domain.actors.ToDoNoteList;
 import org.examples.todos.domain.actors.ToDoPriority;
 import org.examples.todos.domain.actors.ToDoPriorityType;
 import org.examples.todos.domain.common.base.Intention;
+import org.examples.todos.domain.resources.roles.UserRole;
 import org.examples.todos.domain.resources.roles.UserRoleClaims;
 import org.examples.todos.domain.resources.roles.UserRoleInfo;
 import org.examples.todos.domain.resources.users.UserAddress;
@@ -61,14 +64,32 @@ public class ModelMapperDomainEntityInfoMappingConfig
 			RoleEntity::setDescription
 		);
 		
-		typeMap.<UserRoleClaims>addMapping(
-			UserRoleInfo::getClaims, 
-			(d, v) -> {
-				
-				d.allowedToDoCreationCount(v.allowedToDoCreationCount());
-				d.allowedToDoNoteCreationCount(v.allowedToDoNoteCreationCount());
-				d.canEditForeignToDos(v.canEditForeignToDos());
-				d.canRemoveForeignToDos(v.canRemoveForeignToDos());
+		Converter<UserRoleClaims, Integer> allowedToDoCreationCount = 
+			ctx -> ctx.getSource().allowedToDoCreationCount();
+		
+		Converter<UserRoleClaims, Integer> allowedToDoNoteCreationCount =
+			ctx -> ctx.getSource().allowedToDoNoteCreationCount();
+			
+		Converter<UserRoleClaims, Boolean> canEditForeignToDos =
+			ctx -> ctx.getSource().canEditForeignToDos();
+			
+		Converter<UserRoleClaims, Boolean> canRemoveForeignToDos = 
+			ctx -> ctx.getSource().canRemoveForeignToDos();
+			
+		typeMap.addMappings(
+			m -> { 
+				m
+					.using(allowedToDoCreationCount)
+					.map(UserRoleInfo::getClaims, RoleEntity::setAllowedToDoCreationCount);
+				m
+					.using(allowedToDoNoteCreationCount)
+					.map(UserRoleInfo::getClaims, RoleEntity::setAllowedToDoNoteCreationCount);
+				m
+					.using(canEditForeignToDos)
+					.map(UserRoleInfo::getClaims, RoleEntity::setCanEditForeignToDos);
+				m
+					.using(canRemoveForeignToDos)
+					.map(UserRoleInfo::getClaims, RoleEntity::setCanRemoveForeignToDos);
 			}
 		);
 		
@@ -104,53 +125,111 @@ public class ModelMapperDomainEntityInfoMappingConfig
 	{
 		var typeMap = mapper.createTypeMap(UserInfo.class, UserEntity.class);
 		
-		typeMap.<UserName>addMapping(UserInfo::getName, (d, v) -> {
-			
-			d.setName(v.firstName());
-			d.setSurname(v.middleName());
-			d.setPatronymic(v.lastName());
-			
-		});
+		Converter<UserName, String> firstName = ctx -> ctx.getSource().firstName();
+		Converter<UserName, String> middleName = ctx -> ctx.getSource().middleName();
+		Converter<UserName, String> lastName = ctx -> ctx.getSource().lastName();
 		
-		typeMap.<UserInfo>addMapping(s -> s, (d, v) -> {
+		typeMap.addMappings(
+			m -> {
+				m.using(firstName).map(UserInfo::getName, UserEntity::setName);
+				m.using(middleName).map(UserInfo::getName, UserEntity::setPatronymic);
+				m.using(lastName).map(UserInfo::getName, UserEntity::setSurname);
+			}
+		);
+		
+		typeMap.addMappings(m -> m.skip(UserEntity::setAddress));
+		
+		Converter<UserRole, List<RoleEntity>> roles = 
+			ctx -> {
+				
+				var roleEntity = mapper.map(ctx.getSource().getInfo(), RoleEntity.class);
+				
+				var roleEntities = new ArrayList<RoleEntity>();
+				
+				roleEntities.add(roleEntity);
+				
+				return roleEntities;
+			};
 			
-				if (Objects.isNull(v.getAddress()))
-					return;
+		typeMap.addMappings(m -> m.using(roles).map(UserInfo::getRole, UserEntity::setRoles));
+		
+		Converter<UserInfo, UserEntity> converter =
+			ctx -> {
 				
-				var address = v.getAddress().getValue();
+				var address = ctx.getSource().getAddress().getValue();				
 				
-				d.setAddress(
-					new UserAddressEntity(
-						v.getId(), 
-						address.street(), 
-						address.house(),
-						address.room()
-					)
-				);
-			});
+				if (!Objects.isNull(address))
+				{
+					ctx
+						.getDestination()
+						.setAddress(
+							new UserAddressEntity(
+								ctx.getSource().getId(), 
+								address.street(), 
+								address.house(), 
+								address.room()
+							)
+						);
+				}
+				
+				return ctx.getDestination();
+			};
+		
+		typeMap.setPostConverter(converter);
 		
 		var inverseTypeMap = mapper.createTypeMap(UserEntity.class, UserInfo.class);
 		
-		inverseTypeMap.<UserEntity>addMapping(s -> s, (d, v) -> {
-			
-			d.setName(new UserName(v.getName(), v.getSurname(), v.getPatronymic()));
-			
-			if (Objects.isNull(v.getAddress()))
-				return;
-			
-			var address = v.getAddress();
-			
-			d.setAddress(
-				Intention.of(
-					new UserAddress(
-						address.getStreet(), 
-						address.getHome(), 
-						address.getRoom()
-					)
-				)
-			);
-		});
+		Converter<List<RoleEntity>, UserRole> inverseRole = 
+			ctx -> {
+				
+				var roleEntity = ctx.getSource().get(0);
+				
+				return new UserRole(mapper.map(roleEntity, UserRoleInfo.class));
+			};
+				
+		inverseTypeMap.addMappings(
+			m -> m.using(inverseRole).map(UserEntity::getRoles, UserInfo::setRole)
+		);
 		
+		Converter<UserAddressEntity, Intention<UserAddress>> inverseAddress =
+			ctx -> {
+				
+				var addressEntity = ctx.getSource();
+				
+				return Intention.of(
+					new UserAddress(
+						addressEntity.getStreet(), 
+						addressEntity.getHome(), 
+						addressEntity.getRoom()
+					)
+				); 
+			};
+			
+		inverseTypeMap.addMappings(
+			m -> m.using(inverseAddress).map(UserEntity::getAddress, UserInfo::setAddress)
+		);
+		
+		inverseTypeMap.addMappings(m -> m.skip(UserInfo::setName));
+		
+		Converter<UserEntity, UserInfo> userPostConverter =
+			ctx -> {
+				
+				var userEntity = ctx.getSource();
+				var user = ctx.getDestination();
+				
+				user.setName(
+					UserName.of(
+						userEntity.getName(), 
+						userEntity.getPatronymic(), 
+						userEntity.getSurname()
+					)
+				);
+				
+				return user;			
+				
+			};
+			
+		inverseTypeMap.setPostConverter(userPostConverter);		
 	}
 
 	private static void customizeToDoNoteMappings(ModelMapper mapper) 
@@ -168,44 +247,78 @@ public class ModelMapperDomainEntityInfoMappingConfig
 	{
 		var typeMap = mapper.createTypeMap(ToDoInfo.class, ToDoEntity.class);
 		
-		typeMap.addMapping(s -> s.getPriority().type().name(), ToDoEntity::setPriorityType);
-		typeMap.addMapping(s -> s.getPriority().value(), ToDoEntity::setPriorityValue);
 		typeMap.addMapping(s -> s.getParentToDoId().getValue(), ToDoEntity::setParentToDoId);
 		typeMap.addMapping(s -> s.getDescription().getValue(), ToDoEntity::setDescription);
 		typeMap.addMapping(s -> s.getPerformingDate().getValue(), ToDoEntity::setPerformingDate);
 		typeMap.addMapping(s -> s.getNotes().getValue(), ToDoEntity::setNotes);
+		typeMap.addMapping(s -> s.getPriority().value(), ToDoEntity::setPriorityValue);
+		typeMap.addMapping(s -> s.getPriority().typeName(), ToDoEntity::setPriorityType);
+		
+		Converter<ToDoNoteList, List<ToDoNoteEntity>> noteEntities =
+			ctx -> {
+				
+				var notes = ctx.getSource();
+				
+				return 
+					Objects.isNull(notes) ? 
+					null :
+					notes
+						.stream()
+						.map(n -> mapper.map(n.getInfo(), ToDoNoteEntity.class))
+						.toList();
+			};
+			
+		typeMap.addMappings(
+			m -> m.using(noteEntities).map(s -> s.getNotes().getValue(), ToDoEntity::setNotes)
+		);
 		
 		var inverseTypeMap = mapper.createTypeMap(ToDoEntity.class, ToDoInfo.class);
 		
-		inverseTypeMap.<ToDoEntity>addMapping(
-				s -> s, 
-				(d, v) ->
-					d.setPriority(
-						new ToDoPriority(
-							ToDoPriorityType.valueOf(v.getPriorityType()), 
-							v.getPriorityValue())
-					) 
-		);
-		
-		inverseTypeMap.<String>addMapping(ToDoEntity::getDescription, (d, v) -> d.setDescription(Intention.of(v)));
-		inverseTypeMap.<UUID>addMapping(ToDoEntity::getParentToDoId, (d, v) -> d.setParentToDoId(Intention.of(v)));
-		inverseTypeMap.<LocalDateTime>addMapping(ToDoEntity::getPerformingDate, (d, v) -> d.setPerformingDate(Intention.of(v)));
-
-		Converter<Collection<ToDoNoteEntity>, Intention<ToDoNoteList>> converter = 
-			ctx -> 
-				Intention.of(
-					new ToDoNoteList(
-						ctx.getSource()
-							.stream()
-							.map(i -> new ToDoNote(mapper.map(i, ToDoNoteInfo.class)))
-							.toList()			
-					)
-				);
+		Converter<ToDoEntity, ToDoInfo> toDoInfoPostConverter =
+			ctx -> {
 				
+				ctx
+					.getDestination()
+					.setPriority(
+						new ToDoPriority(
+							ToDoPriorityType.valueOf(ctx.getSource().getPriorityType()), 
+							ctx.getSource().getPriorityValue()
+						)
+					);
+				
+				return ctx.getDestination();
+			};
+			
+		inverseTypeMap.setPostConverter(toDoInfoPostConverter);
+		
+		Converter<String, Intention<String>> description =
+			ctx -> Intention.of(ctx.getSource());
+			
+		Converter<UUID, Intention<UUID>> parentToDoId = 
+			ctx -> Intention.of(ctx.getSource());
+			
+		Converter<LocalDateTime, Intention<LocalDateTime>> performingDateTime = 
+			ctx -> Intention.of(ctx.getSource());
+			
+		Converter<Collection<ToDoNoteEntity>, Intention<ToDoNoteList>> converter = 
+				ctx -> 
+					Intention.of(
+						new ToDoNoteList(
+							ctx.getSource()
+								.stream()
+								.map(i -> new ToDoNote(mapper.map(i, ToDoNoteInfo.class)))
+								.toList()			
+						)
+					);
+					
 		inverseTypeMap.addMappings(
-			m -> 
-				m.using(converter)
-				 .map(ToDoEntity::getNotes, ToDoInfo::setNotes)
-		);				
+			m -> {
+				
+				m.using(description).map(ToDoEntity::getDescription, ToDoInfo::setDescription);
+				m.using(parentToDoId).map(ToDoEntity::getParentToDoId, ToDoInfo::setParentToDoId);
+				m.using(performingDateTime).map(ToDoEntity::getPerformingDate, ToDoInfo::setPerformingDate);		
+				m.using(converter).map(ToDoEntity::getNotes, ToDoInfo::setNotes);
+			}
+		);		
 	}
 }

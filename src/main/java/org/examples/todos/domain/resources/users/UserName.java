@@ -10,6 +10,11 @@ public class UserName extends DomainValueObject<UserName>
 	private String middleName;
 	private String lastName;
 
+	public static UserName of(String firstName, String middleName, String lastName)
+	{
+		return new UserName(firstName, middleName, lastName);
+	}
+	
     public UserName(String firstName, String middleName, String lastName)
     {
         setFirstName(firstName);

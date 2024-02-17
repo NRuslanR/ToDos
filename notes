@@ -1,5 +1,19 @@
 1) Introduce EntityId class and EntityIdCreationService
 2) Place right throws Exception class marks in domain classes' api
-3) Actor make optional property and constructor param to simplify domain services and repositories interfaces and implementations
-4) The rule of the allowed to-do note creation count to incapsulate and inject to ToDo and StandardToDoCreationService
-5) Think about ensuring rules after actor assigning for cases like allowed to-do note creation count by user
+
+User Roles use-cases:
+1. CRUD
+
+User use-cases:
+1.CRUD
+1.1 R - User dto + User role dto with hyper media.
+
+To-Do use-cases:
+1. CRUD
+1.1 C - create to-do and assign parent if it is specified
+1.2 R - read all to-dos with set of access rights as hyper media and without sub to-dos by default. The option to specify sub to-do hierarchy including to provide via query string param as filter, paging and sort.
+2. Assign parent
+3. Performing
+
+To-Do note use-cases
+1. CRUD via parent-child relationship url routing

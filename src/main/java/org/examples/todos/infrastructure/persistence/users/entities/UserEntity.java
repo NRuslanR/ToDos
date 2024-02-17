@@ -1,5 +1,6 @@
 package org.examples.todos.infrastructure.persistence.users.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,5 +42,5 @@ public class UserEntity extends BaseEntity<UUID>
             @JoinColumn(name = "role_id")
         }
     )
-    private List<RoleEntity> roles;
+    private List<RoleEntity> roles = new ArrayList<RoleEntity>();
 }

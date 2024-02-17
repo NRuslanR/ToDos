@@ -38,7 +38,12 @@ public class ToDoPriority extends DomainValueObject<ToDoPriority>
     {
         return type;
     }
-
+    
+    public String typeName()
+    {
+    	return type().name();
+    }
+    
     public ToDoPriority changeType(ToDoPriorityType newType)
     {
         return new ToDoPriority(newType, value);
