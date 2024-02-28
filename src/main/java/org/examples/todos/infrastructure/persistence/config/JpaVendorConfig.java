@@ -49,7 +49,7 @@ public abstract class JpaVendorConfig
 	
 	protected Collection<String> getPropertyNames()
 	{
-		return Arrays.asList("spring.jpa.hibernate.hbm2ddl.auto");
+		return Arrays.asList("hibernate.hbm2ddl.auto");
 	}
 	
 }
