@@ -13,7 +13,6 @@ import org.examples.todos.application.todos.accounting.queries.NewToDoInstanceGe
 import org.examples.todos.application.todos.accounting.queries.ToDosAccountingAccessRightsGettingQuery;
 import org.examples.todos.application.todos.accounting.queries.ToDosAccountingQueryService;
 import org.examples.todos.application.todos.accounting.queries.TodoByIdGettingQuery;
-import org.springframework.web.client.ResourceAccessException;
 
 public class StandardToDosAccountingQueryService implements ToDosAccountingQueryService {
 

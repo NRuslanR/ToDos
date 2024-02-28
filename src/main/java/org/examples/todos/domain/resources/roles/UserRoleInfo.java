@@ -6,7 +6,6 @@ import java.util.UUID;
 import org.examples.todos.domain.common.base.Intention;
 import org.examples.todos.domain.common.entities.DomainEntityInfo;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

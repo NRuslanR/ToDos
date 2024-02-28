@@ -4,8 +4,8 @@ import org.examples.todos.application.common.errors.NoResourceAccessRightsExcept
 import org.examples.todos.application.common.queries.errors.ResourceNotFoundException;
 import org.examples.todos.application.roles.accounting.RoleDto;
 import org.examples.todos.application.roles.accounting.queries.AllRolesGettingQuery;
-import org.examples.todos.application.roles.accounting.queries.RolesAccountingQueryService;
 import org.examples.todos.application.roles.accounting.queries.RoleByIdGettingQuery;
+import org.examples.todos.application.roles.accounting.queries.RolesAccountingQueryService;
 
 public class StandardRolesAccountingQueryService implements RolesAccountingQueryService {
 

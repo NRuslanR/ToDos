@@ -3,12 +3,11 @@ package org.examples.todos.web.api.config;
 import java.util.Arrays;
 import java.util.List;
 
-import org.examples.todos.application.config.TodosApplicationConfig;
+import org.examples.todos.application.config.ApplicationConfig;
 import org.examples.todos.application.todos.accounting.commands.ToDosAccountingCommandService;
 import org.examples.todos.application.todos.accounting.commands.standard.StandardToDosAccountingCommandService;
 import org.examples.todos.application.todos.accounting.queries.ToDosAccountingQueryService;
 import org.examples.todos.application.todos.accounting.queries.standard.StandardToDosAccountingQueryService;
-import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -24,9 +23,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @ComponentScan(basePackages = { "org.examples.todos.web.api.*" })
 @EnableWebMvc
 @Import({
-	TodosApplicationConfig.class
+	ApplicationConfig.class
 })
-public class ToDosApiConfig implements WebMvcConfigurer {
+public class ApiConfig implements WebMvcConfigurer {
 
 	@Override
 	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {

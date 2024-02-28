@@ -3,24 +3,17 @@ package org.examples.todos.domain.operations.todos.forming;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.examples.todos.domain.actors.ToDo;
 import org.examples.todos.domain.actors.ToDoInfo;
 import org.examples.todos.domain.actors.ToDoList;
 import org.examples.todos.domain.actors.ToDoPriority;
-import org.examples.todos.domain.actors.ToDoPriorityType;
 import org.examples.todos.domain.actors.ToDoTestUtils;
 import org.examples.todos.domain.common.base.Intention;
 import org.examples.todos.domain.common.errors.DomainException;
 import org.examples.todos.domain.decisionsupport.search.doubles.StubToDoFinder;
-import org.examples.todos.domain.resources.roles.UserRole;
-import org.examples.todos.domain.resources.roles.UserRoleClaims;
-import org.examples.todos.domain.resources.roles.UserRoleInfo;
 import org.examples.todos.domain.resources.users.User;
-import org.examples.todos.domain.resources.users.UserInfo;
-import org.examples.todos.domain.resources.users.UserName;
 import org.examples.todos.domain.resources.users.UserTestUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

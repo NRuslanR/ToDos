@@ -2,7 +2,6 @@ package org.examples.todos.domain.common.entities;
 
 import org.examples.todos.domain.common.base.DomainObject;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

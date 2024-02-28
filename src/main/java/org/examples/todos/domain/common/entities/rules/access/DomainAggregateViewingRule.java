@@ -2,9 +2,6 @@ package org.examples.todos.domain.common.entities.rules.access;
 
 import org.examples.todos.domain.common.entities.DomainAggregateRoot;
 import org.examples.todos.domain.common.entities.DomainEntity;
-import org.examples.todos.domain.common.entities.DomainEntityInfo;
-import org.examples.todos.domain.common.entities.DomainEntityInfo;
-import org.examples.todos.domain.common.entities.rules.DomainAggregateWorkingRules;
 import org.examples.todos.domain.common.entities.rules.DomainEntityRelationshipRule;
 
 public interface DomainAggregateViewingRule<

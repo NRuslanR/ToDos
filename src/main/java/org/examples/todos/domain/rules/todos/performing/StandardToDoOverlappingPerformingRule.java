@@ -2,7 +2,6 @@ package org.examples.todos.domain.rules.todos.performing;
 
 import org.examples.todos.domain.actors.ToDo;
 import org.examples.todos.domain.common.entities.rules.DomainEntityRelationshipRuleException;
-import org.examples.todos.domain.common.errors.DomainException;
 
 public class StandardToDoOverlappingPerformingRule implements ToDoOverlappingPerformingRule {
 

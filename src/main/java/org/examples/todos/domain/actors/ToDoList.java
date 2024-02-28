@@ -7,7 +7,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import org.examples.todos.domain.common.errors.DomainException;
 import org.examples.todos.domain.common.valueobjects.DomainValueObject;

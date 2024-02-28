@@ -6,7 +6,6 @@ import javax.sql.DataSource;
 
 import org.examples.todos.infrastructure.persistence.config.common.PersistenceComponentScan;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
@@ -36,7 +35,7 @@ import com.zaxxer.hikari.HikariDataSource;
 @PersistenceComponentScan
 @EnableTransactionManagement
 @Import({ RepositoriesConfig.class })
-public class ToDosPersistenceConfig {
+public class PersistenceConfig {
 	
 	@Bean
 	public DataSourceConfig dataSourceConfig()

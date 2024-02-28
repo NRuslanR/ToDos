@@ -22,7 +22,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 						pattern = { "org.examples.todos.web.api.*" }
 				)
 		})
-public class ToDosMvcConfig implements WebMvcConfigurer {
+public class MvcConfig implements WebMvcConfigurer {
 	
 	@Bean
 	public SpringResourceTemplateResolver thymeleafTemplateResolver()

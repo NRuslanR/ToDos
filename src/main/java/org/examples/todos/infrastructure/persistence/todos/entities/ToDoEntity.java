@@ -22,6 +22,7 @@ import lombok.Data;
 @Table(name = "todos")
 public class ToDoEntity extends BaseEntity<UUID>
 {
+	@Column(name = "parent_todo_id")
     private UUID parentToDoId;
 
     @Column(name = "priority_type")

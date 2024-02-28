@@ -3,7 +3,6 @@ package org.examples.todos.domain.rules.todos.access;
 import org.examples.todos.domain.actors.ToDo;
 import org.examples.todos.domain.actors.ToDoNoteList;
 import org.examples.todos.domain.common.entities.rules.DomainEntityRelationshipRuleException;
-import org.examples.todos.domain.common.errors.DomainException;
 import org.examples.todos.domain.resources.users.User;
 import org.examples.todos.domain.rules.users.relationships.UserIdentificationRule;
 

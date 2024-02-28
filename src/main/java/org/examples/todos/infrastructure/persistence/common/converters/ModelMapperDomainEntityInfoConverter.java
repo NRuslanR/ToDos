@@ -2,9 +2,8 @@ package org.examples.todos.infrastructure.persistence.common.converters;
 
 import org.examples.todos.domain.common.entities.DomainEntityInfo;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 
-public class ModelMapperDomainEntityInfoConverter<
+public abstract class ModelMapperDomainEntityInfoConverter<
 	EntityInfo extends DomainEntityInfo,
 	Source
 >
@@ -20,17 +19,21 @@ public class ModelMapperDomainEntityInfoConverter<
 	@Override
 	public Source convert(DomainEntityInfo entityInfo) 
 	{
-		var sourceType = new TypeToken<Source>() {}.getType();
-		
+		var sourceType = getSourceType();
+
 		return mapper.map(entityInfo, sourceType);
 	}
+
+	protected abstract Class<Source> getSourceType();
 
 	@Override
 	public EntityInfo convert(Source other) 
 	{
-		var entityInfoType = new TypeToken<EntityInfo>() {}.getType();
+		var entityInfoType = getEntityInfoType();
 		
 		return mapper.map(other, entityInfoType);
 	}
+
+	protected abstract Class<EntityInfo> getEntityInfoType();
 
 }

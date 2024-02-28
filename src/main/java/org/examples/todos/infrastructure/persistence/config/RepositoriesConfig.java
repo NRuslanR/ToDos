@@ -4,15 +4,22 @@ import org.examples.todos.domain.config.common.DomainComponentScan;
 import org.examples.todos.domain.operations.todos.forming.ToDoFormer;
 import org.examples.todos.domain.resources.roles.UserRoleFormer;
 import org.examples.todos.domain.resources.users.UserFormer;
-import org.examples.todos.infrastructure.persistence.common.converters.DomainEntityInfoConverter;
-import org.examples.todos.infrastructure.persistence.common.converters.ModelMapperDomainEntityInfoConverter;
 import org.examples.todos.infrastructure.persistence.config.common.PersistenceComponentScan;
+import org.examples.todos.infrastructure.persistence.roles.converters.DelegatingUserRoleInfoConverter;
+import org.examples.todos.infrastructure.persistence.roles.converters.ModelMapperUserRoleInfoConverter;
+import org.examples.todos.infrastructure.persistence.roles.converters.UserRoleInfoConverter;
 import org.examples.todos.infrastructure.persistence.roles.repositories.SpringJpaRoleEntityRepository;
 import org.examples.todos.infrastructure.persistence.roles.repositories.SpringJpaRoleRepository;
 import org.examples.todos.infrastructure.persistence.roles.repositories.UserRoleRepository;
+import org.examples.todos.infrastructure.persistence.todos.converters.DelegatingToDoInfoConverter;
+import org.examples.todos.infrastructure.persistence.todos.converters.ModelMapperToDoInfoConverter;
+import org.examples.todos.infrastructure.persistence.todos.converters.ToDoInfoConverter;
 import org.examples.todos.infrastructure.persistence.todos.repositories.SpringJpaToDoEntityRepository;
 import org.examples.todos.infrastructure.persistence.todos.repositories.SpringJpaToDoRepository;
 import org.examples.todos.infrastructure.persistence.todos.repositories.ToDoRepository;
+import org.examples.todos.infrastructure.persistence.users.converters.DelegatingUserInfoConverter;
+import org.examples.todos.infrastructure.persistence.users.converters.ModelMapperUserInfoConverter;
+import org.examples.todos.infrastructure.persistence.users.converters.UserInfoConverter;
 import org.examples.todos.infrastructure.persistence.users.repositories.SpringJpaUserEntityRepository;
 import org.examples.todos.infrastructure.persistence.users.repositories.SpringJpaUserRepository;
 import org.examples.todos.infrastructure.persistence.users.repositories.UserRepository;
@@ -20,8 +27,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
+@EnableJpaRepositories(basePackages = { "org.examples.todos.infrastructure.persistence.*" })
 @PersistenceComponentScan
 @DomainComponentScan
 @SuppressWarnings("unchecked")
@@ -38,9 +47,11 @@ public class RepositoriesConfig
 	}
 	
 	@Bean
-	public DomainEntityInfoConverter domainEntityInfoConverter()
+	public UserRoleInfoConverter userRoleInfoConverter()
 	{
-		return new ModelMapperDomainEntityInfoConverter(modelMapper());
+		return new DelegatingUserRoleInfoConverter(
+			new ModelMapperUserRoleInfoConverter(modelMapper())
+		);
 	}
 	
 	@Bean
@@ -52,8 +63,16 @@ public class RepositoriesConfig
 	{
 		return new SpringJpaRoleRepository(
 			roleEntityRepository, 
-			domainEntityInfoConverter(),
+			userRoleInfoConverter(),
 			userRoleFormer
+		);
+	}
+	
+	@Bean
+	public UserInfoConverter userInfoConverter()
+	{
+		return new DelegatingUserInfoConverter(
+			new ModelMapperUserInfoConverter(modelMapper())
 		);
 	}
 	
@@ -66,8 +85,16 @@ public class RepositoriesConfig
 	{
 		return new SpringJpaUserRepository(
 			userEntityRepository, 
-			domainEntityInfoConverter(), 
+			userInfoConverter(), 
 			userFormer		
+		);
+	}
+	
+	@Bean
+	public ToDoInfoConverter toDoInfoConverter()
+	{
+		return new DelegatingToDoInfoConverter(
+			new ModelMapperToDoInfoConverter(modelMapper())
 		);
 	}
 	
@@ -80,7 +107,7 @@ public class RepositoriesConfig
 	{
 		return new SpringJpaToDoRepository(
 			toDoEntityRepository, 
-			domainEntityInfoConverter(), 
+			toDoInfoConverter(), 
 			toDoFormer
 		);
 	}

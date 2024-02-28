@@ -3,14 +3,13 @@ package org.examples.todos.domain.actors;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
- 
+
 import org.examples.todos.domain.common.base.Intention;
 import org.examples.todos.domain.common.entities.DomainAggregateRoot;
 import org.examples.todos.domain.common.errors.DomainException;
 import org.examples.todos.domain.resources.users.User;
 import org.examples.todos.domain.rules.todos.ToDoWorkingRules;
 import org.examples.todos.shared.utils.StringUtils;
-import org.springframework.data.jpa.domain.AbstractAuditable_;
 
 public class ToDo extends DomainAggregateRoot<
 	UUID, 

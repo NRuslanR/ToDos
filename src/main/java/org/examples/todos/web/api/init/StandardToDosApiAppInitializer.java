@@ -1,7 +1,7 @@
 package org.examples.todos.web.api.init;
 
-import org.examples.todos.web.api.config.ToDosApiConfig;
-import org.examples.todos.web.config.ToDosMvcConfig;
+import org.examples.todos.web.api.config.ApiConfig;
+import org.examples.todos.web.config.MvcConfig;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import jakarta.servlet.ServletContext;
@@ -12,7 +12,7 @@ public class StandardToDosApiAppInitializer extends AbstractAnnotationConfigDisp
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
 		
-		return new Class[] { ToDosMvcConfig.class, ToDosApiConfig.class };
+		return new Class[] { MvcConfig.class, ApiConfig.class };
 	}
 
 	@Override

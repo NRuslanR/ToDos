@@ -4,8 +4,6 @@ import org.examples.todos.application.common.consistency.BaseSession;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
-import org.springframework.transaction.support.TransactionTemplate;
 
 import lombok.RequiredArgsConstructor;
 

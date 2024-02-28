@@ -26,7 +26,6 @@ import org.examples.todos.domain.rules.todos.performing.OverlappingToDoIsNotPare
 import org.examples.todos.domain.rules.todos.performing.OverlappingToDoIsNotPerformedException;
 import org.examples.todos.domain.rules.todos.performing.ToDoActorHasNotPerformingRightsException;
 import org.examples.todos.domain.rules.todos.performing.ToDoIsAlreadyPerformedException;
-import org.ietf.jgss.Oid;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

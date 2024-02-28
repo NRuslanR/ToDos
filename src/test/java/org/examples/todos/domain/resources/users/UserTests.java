@@ -10,7 +10,6 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-import org.examples.todos.domain.common.base.Intention;
 import org.examples.todos.domain.common.errors.DomainException;
 import org.examples.todos.domain.resources.roles.UserRole;
 import org.examples.todos.domain.resources.roles.UserRoleClaims;

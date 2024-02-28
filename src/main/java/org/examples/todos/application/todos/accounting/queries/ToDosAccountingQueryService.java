@@ -1,9 +1,9 @@
 package org.examples.todos.application.todos.accounting.queries;
 
-import org.examples.todos.application.todos.accounting.ToDosAccountingAccessRightsDto;
 import org.examples.todos.application.common.errors.NoResourceAccessRightsException;
 import org.examples.todos.application.common.queries.errors.ResourceNotFoundException;
 import org.examples.todos.application.todos.accounting.ToDoInfoDto;
+import org.examples.todos.application.todos.accounting.ToDosAccountingAccessRightsDto;
 
 public interface ToDosAccountingQueryService {
 	
