@@ -23,6 +23,11 @@ public class RoleEntity extends BaseEntity<UUID>
     
     private String description;
     
+    public void setDescription(String value)
+    {
+    	description = value;
+    }
+    
     @Accessors(fluent = true)
     @Column(name = "allowed_todo_creation_count")
     @Setter(value = AccessLevel.NONE)

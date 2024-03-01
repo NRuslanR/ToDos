@@ -47,7 +47,7 @@ public class UserRoleRepositoryTests extends DomainEntityRepositoryTests
 			new UserRoleInfo(
 				UUID.randomUUID(),
 				name, 
-				new UserRoleClaims(0, 0, false, false)
+				new UserRoleClaims(3, 2, false, true)
 			)
 		);
 	}

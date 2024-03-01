@@ -18,10 +18,12 @@ public class DomainValueObject<T extends DomainValueObject<T>> extends DomainObj
     @Override
     public boolean equals(Object other)
     {
-        return
+        var result =
             (other != null) && 
             (other.getClass().equals(getClass())) &&
             attributesMatched(other);
+        
+        return result;
     }
 
     private boolean attributesMatched(Object other) {
@@ -35,7 +37,10 @@ public class DomainValueObject<T extends DomainValueObject<T>> extends DomainObj
 
             try
             {
-                return m.invoke(this).equals(m.invoke(other));
+            	var first = m.invoke(this);
+            	var second = m.invoke(other);
+            	
+                return first.equals(second);
             }
 
             catch (Exception exception)

@@ -95,9 +95,14 @@ public class ModelMapperDomainEntityInfoMappingConfig
 		
 		var inverseTypeMap = mapper.createTypeMap(RoleEntity.class, UserRoleInfo.class);
 		
-		inverseTypeMap.<String>addMapping(
-			RoleEntity::getDescription, 
-			(d, v)-> d.setDescription(Intention.of(v))
+		Converter<String, Intention<String>> description = 
+			ctx -> {
+				
+				return Intention.of(ctx.getSource());
+			};
+			
+		inverseTypeMap.addMappings(
+			m -> m.using(description).map(RoleEntity::getDescription, UserRoleInfo::setDescription)
 		);
 		
 		inverseTypeMap.addMappings(m -> m.skip(UserRoleInfo::setClaims));
@@ -112,7 +117,7 @@ public class ModelMapperDomainEntityInfoMappingConfig
 					source.allowedToDoCreationCount(),
 					source.allowedToDoNoteCreationCount(),
 					source.canEditForeignToDos(),
-					source.canEditForeignToDos()
+					source.canRemoveForeignToDos()
 				));
 			
 			return ctx.getDestination();

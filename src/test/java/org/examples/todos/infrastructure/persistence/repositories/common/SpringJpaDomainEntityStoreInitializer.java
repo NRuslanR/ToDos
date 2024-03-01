@@ -24,7 +24,9 @@ public class SpringJpaDomainEntityStoreInitializer<
 	{
 		var jpaEntities = initialEntities.stream().map(e -> {
 			
-			return (JpaEntity)domainEntityInfoConverter.convert(e.getInfo());
+			var jpaEntity = (JpaEntity)domainEntityInfoConverter.convert(e.getInfo());
+			
+			return jpaEntity;
 			
 		}).toList();
 
